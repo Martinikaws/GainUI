@@ -1,18 +1,18 @@
-# GainUI documentation
+# Nova documentation
 
-GainUI is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so GainUI draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
+Nova is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so Nova draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
 
-Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.GainUI):
+Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.Nova):
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 ```
 
-These docs cover GainUI and Matcha itself: the "Matcha" section lists what Matcha supports, what it doesn't, and the quirks that break scripts.
+These docs cover Nova and Matcha itself: the "Matcha" section lists what Matcha supports, what it doesn't, and the quirks that break scripts.
 
-Rules that matter when writing GainUI code:
-- Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
-- Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
+Rules that matter when writing Nova code:
+- Make a window with Nova:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
+- Give an element a Flag to save it; read it anywhere with Nova.Flags[flag].Value, and change it with :Set(value).
 - Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
 - Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
 - Clean up in the window's OnUnload option; Window:Destroy() removes everything.
@@ -28,24 +28,24 @@ Rules that matter for any Matcha script:
 
 # Getting Started
 
-> A drawn GUI library for Matcha. Build a Gain-style window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.
+> A drawn GUI library for Matcha. Build a clean, modern window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.
 
 ## Install
 
 Load the library at the top of your script. There's nothing to download: it always runs the latest version from GitHub.
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 ```
 
-> **Note:** Why `or _G.GainUI`? Matcha's `loadstring` drops return values, so GainUI also puts itself in `_G.GainUI`. This line works in Matcha and in executors that do return.
+> **Note:** Why `or _G.Nova`? Matcha's `loadstring` drops return values, so Nova also puts itself in `_G.Nova`. This line works in Matcha and in executors that do return.
 
 ## Your first window
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     Subtitle = "v1.0",
     ConfigName = "myscript", -- remembers every flagged value between runs
@@ -75,10 +75,10 @@ Press `Right Shift` to show or hide the window. Drag it by the title. Every wind
 
 ## Next steps
 
-- [Window](https://martinikaws.github.io/GainUI/md/window-create.md): Title, size, accent, keys and saving.
-- [Elements](https://martinikaws.github.io/GainUI/md/elements-toggle.md): Every control you can put in a tab.
-- [Matcha](https://martinikaws.github.io/GainUI/md/matcha.md): What Matcha supports, and the quirks that break scripts.
-- [Full example](https://martinikaws.github.io/GainUI/md/start-example.md): Every element in one script.
+- [Window](https://martinikaws.github.io/Nova/md/window-create.md): Title, size, accent, keys and saving.
+- [Elements](https://martinikaws.github.io/Nova/md/elements-toggle.md): Every control you can put in a tab.
+- [Matcha](https://martinikaws.github.io/Nova/md/matcha.md): What Matcha supports, and the quirks that break scripts.
+- [Full example](https://martinikaws.github.io/Nova/md/start-example.md): Every element in one script.
 
 ---
 
@@ -91,17 +91,17 @@ Press `Right Shift` to show or hide the window. Drag it by the title. Every wind
 One line in Matcha opens a window that demonstrates everything: every element, the methods that change them from code, the window's own methods, labels and images, and scrolling. What you change shows up live, and the values are saved between runs.
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/showcase.lua"))()
 ```
 
-> **Note:** Right Shift shows and hides it. Its source is [showcase.lua](https://github.com/Martinikaws/GainUI/blob/main/showcase.lua), a good place to copy from.
+> **Note:** Right Shift shows and hides it. Its source is [showcase.lua](https://github.com/Martinikaws/Nova/blob/main/showcase.lua), a good place to copy from.
 
 ## A short example
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 
-local Window = GainUI:CreateWindow({Title = "GainUI", Subtitle = "Example", ConfigName = "example"})
+local Window = Nova:CreateWindow({Title = "Nova", Subtitle = "Example", ConfigName = "example"})
 
 local Main = Window:Tab("Main")
 Main:Section("Basics")
@@ -130,10 +130,10 @@ Extra:Colorpicker({Name = "Box color", Default = Color3.fromRGB(255, 80, 80), Fl
     Callback = function(c) print(c) end})
 Extra:Paragraph({Title = "About", Content = "Long tabs scroll: drag the page or its bar, or use Page Up / Page Down."})
 
-print("Speed is", GainUI.Flags.Speed.Value)
+print("Speed is", Nova.Flags.Speed.Value)
 ```
 
-The same file is in the repository as [example.lua](https://github.com/Martinikaws/GainUI/blob/main/example.lua).
+The same file is in the repository as [example.lua](https://github.com/Martinikaws/Nova/blob/main/example.lua).
 
 ---
 
@@ -142,16 +142,16 @@ The same file is in the repository as [example.lua](https://github.com/Martinika
 > Makes a window and returns it. A script can make more than one.
 
 ```lua
-GainUI:CreateWindow(options: table) -> Window
+Nova:CreateWindow(options: table) -> Window
 ```
 
 ```lua
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     Subtitle = "v1.0",
     ConfigName = "myscript",
     ToggleKey = "RightShift",
-    Accent = "568cff",
+    Accent = "eab308",
     Size = {620, 460},
 })
 ```
@@ -160,12 +160,12 @@ local Window = GainUI:CreateWindow({
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Title` | string | `"GainUI"` | Shown at the top of the sidebar. |
+| `Title` | string | `"Nova"` | Shown at the top of the sidebar. |
 | `Subtitle` | string | none | A smaller line under the title, in the accent color. |
-| `ConfigName` | string | none | Saves flagged elements to `Folder/ConfigName.json`. Without it nothing is saved. See [Saving](https://martinikaws.github.io/GainUI/md/window-saving.md). |
-| `Folder` | string | `"GainUI"` | The workspace folder settings are saved in. |
-| `ToggleKey` | key | `"RightShift"` | The key that shows and hides the window. See [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md). |
-| `Accent` | hex / Color3 | `"568cff"` | The highlight color. Users can change it in Settings. |
+| `ConfigName` | string | none | Saves flagged elements to `Folder/ConfigName.json`. Without it nothing is saved. See [Saving](https://martinikaws.github.io/Nova/md/window-saving.md). |
+| `Folder` | string | `"Nova"` | The workspace folder settings are saved in. |
+| `ToggleKey` | key | `"RightShift"` | The key that shows and hides the window. See [Key names](https://martinikaws.github.io/Nova/md/guides-keys.md). |
+| `Accent` | hex / Color3 | `"eab308"` (yellow) | The highlight color. Users can change it in Settings. |
 | `Size` | {w, h} | `{620, 460}` | Window size in pixels (at least 460 × 320). It shrinks to fit small screens. |
 | `Open` | boolean | `true` | Start shown. With `false`, the window waits for the toggle key. |
 | `Settings` | boolean | `true` | Add the built-in Settings tab (show/hide key, accent, mouse offset, reset, unload). |
@@ -185,7 +185,7 @@ local Window = GainUI:CreateWindow({
 | --- | --- |
 | `Window:Tab(name) -> Tab` | Adds a tab to the sidebar. Aliases: `CreateTab`, `AddTab`. |
 | `Window:SelectTab(tab \| name)` | Switches to a tab. |
-| `Window:Notify(options)` | Shows a notification. See [Notifications](https://martinikaws.github.io/GainUI/md/window-notify.md). |
+| `Window:Notify(options)` | Shows a notification. See [Notifications](https://martinikaws.github.io/Nova/md/window-notify.md). |
 | `Window:Toggle(open?)` | Shows or hides the window. Without an argument, it flips. |
 | `Window:IsOpen() -> boolean` | Whether the window is shown. |
 | `Window:SetAccent(color)` | Changes the accent (hex string or Color3). |
@@ -209,13 +209,13 @@ local Window = GainUI:CreateWindow({
 
 | Function | Description |
 | --- | --- |
-| `GainUI:CreateWindow(options)` | Makes a window. Alias: `GainUI:Window`. |
-| `GainUI:Notify(options)` | A notification on the newest window. |
-| `GainUI:Destroy()` | Destroys every window. |
-| `GainUI.Flags` | Every flagged element from every window. |
-| `GainUI.Hex(hex) -> Color3` | `"ff5050"` to a Color3. |
-| `GainUI.KeyLabel(key) -> string` | How a key is shown, like `"Right Shift"`. |
-| `GainUI.Version` | The library version. |
+| `Nova:CreateWindow(options)` | Makes a window. Alias: `Nova:Window`. |
+| `Nova:Notify(options)` | A notification on the newest window. |
+| `Nova:Destroy()` | Destroys every window. |
+| `Nova.Flags` | Every flagged element from every window. |
+| `Nova.Hex(hex) -> Color3` | `"ff5050"` to a Color3. |
+| `Nova.KeyLabel(key) -> string` | How a key is shown, like `"Right Shift"`. |
+| `Nova.Version` | The library version. |
 
 ---
 
@@ -250,29 +250,29 @@ Up to five show at once; the oldest goes first. `Window:Notify("Text")` works to
 > Give an element a Flag and its value is saved and restored between runs.
 
 ```lua
-local Window = GainUI:CreateWindow({Title = "My Script", ConfigName = "myscript"})
+local Window = Nova:CreateWindow({Title = "My Script", ConfigName = "myscript"})
 local Main = Window:Tab("Main")
 
 Main:Toggle({Name = "Enabled", Flag = "Enabled", Callback = function(on) ... end})
 
 -- anywhere later:
-if GainUI.Flags.Enabled.Value then ... end
+if Nova.Flags.Enabled.Value then ... end
 ```
 
 ## How it works
 
-- With a `ConfigName`, flagged values are written to `GainUI/<ConfigName>.json` in Matcha's workspace, a second after the last change and when the window is destroyed.
+- With a `ConfigName`, flagged values are written to `Nova/<ConfigName>.json` in Matcha's workspace, a second after the last change and when the window is destroyed.
 - When the script runs again, each flagged element starts from its saved value instead of its `Default`.
 - For a restored value, the element's `Callback` runs once on the first frame, so your script applies it just like a click would. Keybinds are the exception: they only fire on a key press.
 - The show/hide key, the accent and the mouse offset from the Settings tab are saved too.
 
 ## Reading flags
 
-`GainUI.Flags[flag]` (and `Window.Flags[flag]`) is the element itself, so you can read `.Value` or call `:Set()` from anywhere.
+`Nova.Flags[flag]` (and `Window.Flags[flag]`) is the element itself, so you can read `.Value` or call `:Set()` from anywhere.
 
 ```lua
-GainUI.Flags.Speed:Set(50)          -- moves the slider and runs its callback
-print(GainUI.Flags.Mode.Value)      -- "Balanced"
+Nova.Flags.Speed:Set(50)          -- moves the slider and runs its callback
+print(Nova.Flags.Mode.Value)      -- "Balanced"
 ```
 
 > **Note:** Flags must be unique across windows. Use a prefix like `"MyScript_Speed"` if several scripts share a session.
@@ -294,20 +294,20 @@ print(GainUI.Flags.Mode.Value)      -- "Balanced"
 
 > Every control you can put in a tab. Each one returns an object you can read and change later.
 
-- [Toggle](https://martinikaws.github.io/GainUI/md/elements-toggle.md): On/off switch
-- [Slider](https://martinikaws.github.io/GainUI/md/elements-slider.md): A number in a range
-- [Button](https://martinikaws.github.io/GainUI/md/elements-button.md): Runs a function
-- [Dropdown](https://martinikaws.github.io/GainUI/md/elements-dropdown.md): One or many options
-- [Textbox](https://martinikaws.github.io/GainUI/md/elements-textbox.md): Typed text
-- [Keybind](https://martinikaws.github.io/GainUI/md/elements-keybind.md): Rebindable keys
-- [Colorpicker](https://martinikaws.github.io/GainUI/md/elements-colorpicker.md): H, S, V, swatches, hex
-- [Tabs & Sections](https://martinikaws.github.io/GainUI/md/elements-tab.md): Pages and groups
-- [Label & Paragraph](https://martinikaws.github.io/GainUI/md/elements-label.md): Wrapped text
-- [Image](https://martinikaws.github.io/GainUI/md/elements-image.md): From a link or bytes
-- [Notifications](https://martinikaws.github.io/GainUI/md/window-notify.md): Slide-in messages
-- [Saving & Flags](https://martinikaws.github.io/GainUI/md/window-saving.md): Remembered between runs
+- [Toggle](https://martinikaws.github.io/Nova/md/elements-toggle.md): On/off switch
+- [Slider](https://martinikaws.github.io/Nova/md/elements-slider.md): A number in a range
+- [Button](https://martinikaws.github.io/Nova/md/elements-button.md): Runs a function
+- [Dropdown](https://martinikaws.github.io/Nova/md/elements-dropdown.md): One or many options
+- [Textbox](https://martinikaws.github.io/Nova/md/elements-textbox.md): Typed text
+- [Keybind](https://martinikaws.github.io/Nova/md/elements-keybind.md): Rebindable keys
+- [Colorpicker](https://martinikaws.github.io/Nova/md/elements-colorpicker.md): H, S, V, swatches, hex
+- [Tabs & Sections](https://martinikaws.github.io/Nova/md/elements-tab.md): Pages and groups
+- [Label & Paragraph](https://martinikaws.github.io/Nova/md/elements-label.md): Wrapped text
+- [Image](https://martinikaws.github.io/Nova/md/elements-image.md): From a link or bytes
+- [Notifications](https://martinikaws.github.io/Nova/md/window-notify.md): Slide-in messages
+- [Saving & Flags](https://martinikaws.github.io/Nova/md/window-saving.md): Remembered between runs
 
-All elements share the same methods: [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+All elements share the same methods: [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 ---
 
@@ -371,7 +371,7 @@ Main:Button({
 | `Name` | string | none | The label. |
 | `Callback` | function() | none | Runs on click, in its own thread, so it can wait. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 ---
 
@@ -401,10 +401,10 @@ print(Esp.Value)    -- true
 | --- | --- | --- | --- |
 | `Name` | string | none | The label. |
 | `Default` | boolean | `false` | The starting state. |
-| `Flag` | string | none | Saves the state. See [Saving](https://martinikaws.github.io/GainUI/md/window-saving.md). |
+| `Flag` | string | none | Saves the state. See [Saving](https://martinikaws.github.io/Nova/md/window-saving.md). |
 | `Callback` | function(on) | none | Runs with the new state when it changes. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 ---
 
@@ -442,7 +442,7 @@ Main:Slider({
 | `Flag` | string | none | Saves the value. |
 | `Callback` | function(value) | none | Runs with each new value while dragging. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 > **Note:** `:Set(v)` clamps to the range and rounds to the increment.
 
@@ -532,7 +532,7 @@ Main:Textbox({
 | `Flag` | string | none | Saves the text. |
 | `Callback` | function(text) | none | Runs when typing ends: `Enter`, `Esc`, or clicking somewhere else. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 > **Note:** While a box is focused, typing goes to it and not to the game, and the show/hide key doesn't work. Letters, digits, space and common symbols are supported, with `Shift` for capitals; hold `Backspace` to delete quickly.
 
@@ -561,7 +561,7 @@ Main:Keybind({
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Name` | string | none | The label. |
-| `Default` | key | none | The starting key, like `"F"` or `"LeftAlt"`. See [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md). |
+| `Default` | key | none | The starting key, like `"F"` or `"LeftAlt"`. See [Key names](https://martinikaws.github.io/Nova/md/guides-keys.md). |
 | `Mode` | string | `"Press"` | `"Press"`: runs on each press. `"Toggle"`: flips a state on each press and passes it. `"Hold"`: passes `true` on press and `false` on release. |
 | `Flag` | string | none | Saves the key. |
 | `Callback` | function(state?) | none | Runs on the key, as described in Mode. |
@@ -571,7 +571,7 @@ Main:Keybind({
 
 Click the key chip, then press a key. `Esc` cancels and `Backspace` clears it to None. Keybinds work while the window is hidden, but not while typing in a text box.
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 ---
 
@@ -603,7 +603,7 @@ Main:Colorpicker({
 
 Clicking the swatch opens the picker: drag the **H**, **S** and **V** bars, click one of the ten swatches, or click the hex box and type a code like `ff5050` (then `Enter`). Alias: `ColorPicker`.
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 ---
 
@@ -686,7 +686,7 @@ Main:Image({
 
 If you're coming from another library, the familiar names work too:
 
-| GainUI | Also works |
+| Nova | Also works |
 | --- | --- |
 | `Tab:Toggle` | `AddToggle`, `CreateToggle` |
 | `Tab:Textbox` | `Input`, `AddInput`, `CreateInput`, `AddTextbox` |
@@ -719,9 +719,9 @@ ToggleKey = 0x2D               -- Windows key code
 
 ---
 
-# How GainUI handles Matcha
+# How Nova handles Matcha
 
-> What GainUI does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.
+> What Nova does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.
 
 ## Everything is drawn
 
@@ -731,7 +731,7 @@ Matcha can't create instances, so there are no ScreenGuis. Every window is made 
 
 - **No mouse wheel.** Matcha can't read it. Pages scroll by dragging them, dragging the scrollbar, or with `Page Up` / `Page Down` and the arrow keys while pointing at them.
 - **Clicks count on release.** So pressing and dragging scrolls instead of clicking whatever you started on.
-- **The game doesn't get your clicks.** While the mouse is over the window, or you're typing or binding a key, GainUI calls `setrobloxinput(false)`, and gives input back afterwards.
+- **The game doesn't get your clicks.** While the mouse is over the window, or you're typing or binding a key, Nova calls `setrobloxinput(false)`, and gives input back afterwards.
 - **Clicks land off?** Some setups report the mouse a few pixels away from where it's drawn. Users can fix it in **Settings → Mouse offset**, or you can set `MouseOffset`. The value is saved.
 - **Roblox must be focused.** Keys and clicks are read with `iskeypressed` and `ismouse1pressed`. They're ignored while another window is in front.
 
@@ -743,7 +743,7 @@ The window runs from a `RenderStepped` connection. That keeps it alive after you
 
 ## Text
 
-Matcha draws text a little higher than its position. GainUI shifts it back, and measures text with `TextBounds` so long labels get trimmed with ".." instead of overflowing.
+Matcha draws text a little higher than its position. Nova shifts it back, and measures text with `TextBounds` so long labels get trimmed with ".." instead of overflowing.
 
 ## Unloading
 
@@ -752,7 +752,7 @@ Matcha draws text a little higher than its position. GainUI shifts it back, and 
 ```lua
 local conn = game:GetService("RunService").Heartbeat:Connect(function() ... end)
 
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     OnUnload = function()
         conn:Disconnect()
@@ -773,22 +773,22 @@ local Tab = Window:CreateTab("Main")
 Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
 Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})
 
--- GainUI: same element calls, a different window line
-local Window = GainUI:CreateWindow({Title = "My Script"})
+-- Nova: same element calls, a different window line
+local Window = Nova:CreateWindow({Title = "My Script"})
 local Tab = Window:CreateTab("Main")
 Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
 Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})
 ```
 
-| Rayfield | GainUI |
+| Rayfield | Nova |
 | --- | --- |
 | `CreateWindow({Name})` | `CreateWindow({Title})` |
 | `ConfigurationSaving = {Enabled, FileName}` | `ConfigName` |
-| `Rayfield:Notify({Title, Content, Duration})` | `Window:Notify` or `GainUI:Notify` |
+| `Rayfield:Notify({Title, Content, Duration})` | `Window:Notify` or `Nova:Notify` |
 | `Flags[flag].CurrentValue` | `Flags[flag].Value` |
 | `Element:Set(v)` | `Element:Set(v)` (same) |
 
-> **Warning:** Icons, key systems and Discord invites aren't part of GainUI.
+> **Warning:** Icons, key systems and Discord invites aren't part of Nova.
 
 ---
 
@@ -803,8 +803,8 @@ Matcha runs **outside** the Roblox client. It doesn't hook the engine; it reads 
 ## Rules that break scripts
 
 - **Bindings are a fixed list.** Reading a property Matcha doesn't support doesn't error: it falls back to `FindFirstChild` and gives `nil`. An unexplained `nil` usually means "unsupported". **Writing** an unsupported property errors (`Unknown property`).
-- **No instances.** There is no `Instance.new`, so no ScreenGuis, parts or sounds of your own. Draw UI with the [Drawing library](https://martinikaws.github.io/GainUI/md/matcha-drawing.md) (that's what GainUI does).
-- **`loadstring` drops return values.** `loadstring("return 5")()` gives nothing, even through `pcall`. Share values through `_G` instead; there is no `getgenv` or `shared`. That's why GainUI loads with `... or _G.GainUI`.
+- **No instances.** There is no `Instance.new`, so no ScreenGuis, parts or sounds of your own. Draw UI with the [Drawing library](https://martinikaws.github.io/Nova/md/matcha-drawing.md) (that's what Nova does).
+- **`loadstring` drops return values.** `loadstring("return 5")()` gives nothing, even through `pcall`. Share values through `_G` instead; there is no `getgenv` or `shared`. That's why Nova loads with `... or _G.Nova`.
 - **Threads can stop.** A `task.spawn` loop that waits with `task.wait` can stop resuming once the script that started it has finished. For anything that must keep running, connect to `RunService.Heartbeat` or `RenderStepped` and throttle inside it.
 - **No mouse wheel.** `UserInputService.InputChanged` is `nil`; only `InputBegan` and `InputEnded` exist. Poll input instead: `iskeypressed`, `ismouse1pressed` and `Player:GetMouse()` (`Mouse.X` / `Mouse.Y`).
 - **Roblox must be focused** for key and mouse input, including `keypress` and `mouse1click`. Check `isrbxactive()`.
@@ -836,7 +836,7 @@ end)
 _G.MyScript = {stop = function() conn:Disconnect() end}
 ```
 
-> **Note:** The Matcha-specific files: [official docs as one text file](https://matcha-latte.gitbook.io/matcha/llms-full.txt). Everything on these pages is also in GainUI's [llms.txt](llms.txt).
+> **Note:** The Matcha-specific files: [official docs as one text file](https://matcha-latte.gitbook.io/matcha/llms-full.txt). Everything on these pages is also in Nova's [llms.txt](llms.txt).
 
 ---
 
@@ -947,7 +947,7 @@ All paths are relative to Matcha's workspace folder. Not in the official docs, b
 
 # Drawing
 
-> Matcha's only way to put things on screen. Everything GainUI shows is made of these.
+> Matcha's only way to put things on screen. Everything Nova shows is made of these.
 
 ```lua
 Drawing.new(kind: string) -> DrawingObject

@@ -24,7 +24,7 @@ print(Esp.Value)    -- true
 | --- | --- | --- | --- |
 | `Name` | string | none | The label. |
 | `Default` | boolean | `false` | The starting state. |
-| `Flag` | string | none | Saves the state. See [Saving](https://martinikaws.github.io/GainUI/md/window-saving.md). |
+| `Flag` | string | none | Saves the state. See [Saving](https://martinikaws.github.io/Nova/md/window-saving.md). |
 | `Callback` | function(on) | none | Runs with the new state when it changes. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).

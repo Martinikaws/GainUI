@@ -6,7 +6,7 @@
 | --- | --- |
 | `Window:Tab(name) -> Tab` | Adds a tab to the sidebar. Aliases: `CreateTab`, `AddTab`. |
 | `Window:SelectTab(tab \| name)` | Switches to a tab. |
-| `Window:Notify(options)` | Shows a notification. See [Notifications](https://martinikaws.github.io/GainUI/md/window-notify.md). |
+| `Window:Notify(options)` | Shows a notification. See [Notifications](https://martinikaws.github.io/Nova/md/window-notify.md). |
 | `Window:Toggle(open?)` | Shows or hides the window. Without an argument, it flips. |
 | `Window:IsOpen() -> boolean` | Whether the window is shown. |
 | `Window:SetAccent(color)` | Changes the accent (hex string or Color3). |
@@ -30,10 +30,10 @@
 
 | Function | Description |
 | --- | --- |
-| `GainUI:CreateWindow(options)` | Makes a window. Alias: `GainUI:Window`. |
-| `GainUI:Notify(options)` | A notification on the newest window. |
-| `GainUI:Destroy()` | Destroys every window. |
-| `GainUI.Flags` | Every flagged element from every window. |
-| `GainUI.Hex(hex) -> Color3` | `"ff5050"` to a Color3. |
-| `GainUI.KeyLabel(key) -> string` | How a key is shown, like `"Right Shift"`. |
-| `GainUI.Version` | The library version. |
+| `Nova:CreateWindow(options)` | Makes a window. Alias: `Nova:Window`. |
+| `Nova:Notify(options)` | A notification on the newest window. |
+| `Nova:Destroy()` | Destroys every window. |
+| `Nova.Flags` | Every flagged element from every window. |
+| `Nova.Hex(hex) -> Color3` | `"ff5050"` to a Color3. |
+| `Nova.KeyLabel(key) -> string` | How a key is shown, like `"Right Shift"`. |
+| `Nova.Version` | The library version. |

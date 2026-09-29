@@ -21,7 +21,7 @@ Main:Keybind({
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `Name` | string | none | The label. |
-| `Default` | key | none | The starting key, like `"F"` or `"LeftAlt"`. See [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md). |
+| `Default` | key | none | The starting key, like `"F"` or `"LeftAlt"`. See [Key names](https://martinikaws.github.io/Nova/md/guides-keys.md). |
 | `Mode` | string | `"Press"` | `"Press"`: runs on each press. `"Toggle"`: flips a state on each press and passes it. `"Hold"`: passes `true` on press and `false` on release. |
 | `Flag` | string | none | Saves the key. |
 | `Callback` | function(state?) | none | Runs on the key, as described in Mode. |
@@ -31,4 +31,4 @@ Main:Keybind({
 
 Click the key chip, then press a key. `Esc` cancels and `Backspace` clears it to None. Keybinds work while the window is hidden, but not while typing in a text box.
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).

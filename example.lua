@@ -1,12 +1,12 @@
--- GainUI example: every element once. Run it in Matcha.
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+-- Nova example: every element once. Run it in Matcha.
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 
-local Window = GainUI:CreateWindow({
-    Title = "GainUI",
+local Window = Nova:CreateWindow({
+    Title = "Nova",
     Subtitle = "Example",
-    ConfigName = "example", -- saves every flagged element to GainUI/example.json
+    ConfigName = "example", -- saves every flagged element to Nova/example.json
     ToggleKey = "RightShift",
-    Accent = "568cff",
+    Accent = "eab308",
 })
 
 local Main = Window:Tab("Main")
@@ -40,4 +40,4 @@ Extra:Paragraph({Title = "About", Content = "Tabs scroll when they get long: dra
     .. "or use Page Up / Page Down while pointing at it (Matcha can't read the mouse wheel)."})
 
 -- Read a value anywhere with the flag:
-print("Speed is", GainUI.Flags.Speed.Value)
+print("Speed is", Nova.Flags.Speed.Value)

@@ -20,4 +20,4 @@ Main:Button({
 | `Name` | string | none | The label. |
 | `Callback` | function() | none | Runs on click, in its own thread, so it can wait. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).

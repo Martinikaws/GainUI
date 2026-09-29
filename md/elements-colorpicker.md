@@ -26,4 +26,4 @@ Main:Colorpicker({
 
 Clicking the swatch opens the picker: drag the **H**, **S** and **V** bars, click one of the ten swatches, or click the hex box and type a code like `ff5050` (then `Enter`). Alias: `ColorPicker`.
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).

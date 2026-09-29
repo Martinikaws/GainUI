@@ -32,6 +32,6 @@ Main:Slider({
 | `Flag` | string | none | Saves the value. |
 | `Callback` | function(value) | none | Runs with each new value while dragging. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 > **Note:** `:Set(v)` clamps to the range and rounds to the increment.

@@ -9,8 +9,8 @@ Matcha runs **outside** the Roblox client. It doesn't hook the engine; it reads 
 ## Rules that break scripts
 
 - **Bindings are a fixed list.** Reading a property Matcha doesn't support doesn't error: it falls back to `FindFirstChild` and gives `nil`. An unexplained `nil` usually means "unsupported". **Writing** an unsupported property errors (`Unknown property`).
-- **No instances.** There is no `Instance.new`, so no ScreenGuis, parts or sounds of your own. Draw UI with the [Drawing library](https://martinikaws.github.io/GainUI/md/matcha-drawing.md) (that's what GainUI does).
-- **`loadstring` drops return values.** `loadstring("return 5")()` gives nothing, even through `pcall`. Share values through `_G` instead; there is no `getgenv` or `shared`. That's why GainUI loads with `... or _G.GainUI`.
+- **No instances.** There is no `Instance.new`, so no ScreenGuis, parts or sounds of your own. Draw UI with the [Drawing library](https://martinikaws.github.io/Nova/md/matcha-drawing.md) (that's what Nova does).
+- **`loadstring` drops return values.** `loadstring("return 5")()` gives nothing, even through `pcall`. Share values through `_G` instead; there is no `getgenv` or `shared`. That's why Nova loads with `... or _G.Nova`.
 - **Threads can stop.** A `task.spawn` loop that waits with `task.wait` can stop resuming once the script that started it has finished. For anything that must keep running, connect to `RunService.Heartbeat` or `RenderStepped` and throttle inside it.
 - **No mouse wheel.** `UserInputService.InputChanged` is `nil`; only `InputBegan` and `InputEnded` exist. Poll input instead: `iskeypressed`, `ismouse1pressed` and `Player:GetMouse()` (`Mouse.X` / `Mouse.Y`).
 - **Roblox must be focused** for key and mouse input, including `keypress` and `mouse1click`. Check `isrbxactive()`.
@@ -42,4 +42,4 @@ end)
 _G.MyScript = {stop = function() conn:Disconnect() end}
 ```
 
-> **Note:** The Matcha-specific files: [official docs as one text file](https://matcha-latte.gitbook.io/matcha/llms-full.txt). Everything on these pages is also in GainUI's [llms.txt](llms.txt).
+> **Note:** The Matcha-specific files: [official docs as one text file](https://matcha-latte.gitbook.io/matcha/llms-full.txt). Everything on these pages is also in Nova's [llms.txt](llms.txt).

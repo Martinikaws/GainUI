@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GainUI</title>
-<meta name="description" content="GainUI - a drawn GUI library for Matcha. Windows, tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.">
+<title>Nova</title>
+<meta name="description" content="Nova - a drawn GUI library for Matcha. Windows, tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235b93ff'/%3E%3Cstop offset='.55' stop-color='%23c29cff'/%3E%3Cstop offset='1' stop-color='%23ffd36b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='9' fill='url(%23g)'/%3E%3Crect x='6' y='6' width='20' height='20' rx='5' fill='%230b0f18'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -159,19 +159,19 @@ td:first-child code { white-space: nowrap; }
   background: radial-gradient(75% 60% at 50% 100%, rgba(91,147,255,.22), transparent 72%), rgba(8,12,20,.45); border: 1px solid rgba(255,255,255,.06); transform: translateZ(10px); }
 .tile b { display: block; font-size: 14.5px; transform: translateZ(18px); }
 .tile span { display: block; color: var(--muted); font-size: 12.5px; margin-top: 3px; transform: translateZ(14px); }
-/* tiny drawn controls inside tiles (GainUI's own colors) */
+/* tiny drawn controls inside tiles (Nova's own colors) */
 .m-row { width: 100%; height: 26px; border-radius: 6px; background: #1c1e27; display: flex; align-items: center; justify-content: space-between; padding: 0 9px; font-size: 10.5px; color: #e2e5ec; }
-.m-sw { width: 28px; height: 14px; border-radius: 7px; background: #568cff; position: relative; } .m-sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: #fff; }
-.m-tr { width: 100%; height: 5px; border-radius: 3px; background: #2c2f3c; position: relative; } .m-tr i { position: absolute; left: 0; top: 0; bottom: 0; width: 58%; border-radius: 3px; background: #568cff; }
+.m-sw { width: 28px; height: 14px; border-radius: 7px; background: #eab308; position: relative; } .m-sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 10px; height: 10px; border-radius: 50%; background: #14161c; }
+.m-tr { width: 100%; height: 5px; border-radius: 3px; background: #2c2f3c; position: relative; } .m-tr i { position: absolute; left: 0; top: 0; bottom: 0; width: 58%; border-radius: 3px; background: #eab308; }
 .m-tr b { position: absolute; left: 58%; top: -4px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #e2e5ec; }
 .m-box { width: 100%; height: 24px; border-radius: 5px; background: #16181f; border: 1px solid #2c2f3c; display: flex; align-items: center; justify-content: space-between; padding: 0 8px; font-size: 10.5px; color: #e2e5ec; }
 .m-key { padding: 2px 8px; border-radius: 5px; background: #16181f; border: 1px solid #2c2f3c; font-size: 10px; }
-.m-btn { width: 100%; height: 26px; border-radius: 6px; background: #1c1e27; border: 1px solid #568cff; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: #e2e5ec; }
+.m-btn { width: 100%; height: 26px; border-radius: 6px; background: #1c1e27; border: 1px solid #eab308; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; color: #e2e5ec; }
 .m-hue { width: 100%; height: 10px; border-radius: 3px; background: linear-gradient(90deg, red, #ff0, lime, cyan, blue, #f0f, red); }
 .m-row svg { width: 18px; height: 18px; color: #8a90a0; }
-.m-sec { width: 100%; display: flex; align-items: center; gap: 8px; color: #568cff; font-size: 10px; font-weight: 700; letter-spacing: .06em; } .m-sec::after { content: ""; flex: 1; height: 1px; background: #2c2f3c; }
+.m-sec { width: 100%; display: flex; align-items: center; gap: 8px; color: #eab308; font-size: 10px; font-weight: 700; letter-spacing: .06em; } .m-sec::after { content: ""; flex: 1; height: 1px; background: #2c2f3c; }
 .m-note { width: 100%; border-radius: 6px; background: #0f1015; border: 1px solid #2c2f3c; padding: 5px 8px 5px 11px; font-size: 10px; color: #8a90a0; position: relative; }
-.m-note::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 2px; background: #568cff; }
+.m-note::before { content: ""; position: absolute; left: 4px; top: 6px; bottom: 6px; width: 2px; background: #eab308; }
 .m-note b { color: #e2e5ec; font-size: 10.5px; transform: none; }
 
 /* Home hero */
@@ -184,20 +184,20 @@ td:first-child code { white-space: nowrap; }
 .gw { width: 470px; height: 262px; margin: 0 auto; display: flex; border-radius: 10px; border: 1px solid #2c2f3c; background: #0f1015; overflow: hidden; color: #e2e5ec; font-size: 11.5px; box-shadow: 0 20px 50px rgba(0,0,0,.45); }
 .gw .gs { width: 120px; background: #13141b; border-right: 1px solid #2c2f3c; padding: 12px 7px; }
 .gw .gs .t { font-weight: 700; font-size: 13px; padding: 0 7px; }
-.gw .gs .st { color: #568cff; font-size: 10px; padding: 0 7px 12px; }
+.gw .gs .st { color: #eab308; font-size: 10px; padding: 0 7px 12px; }
 .gw .gs .tab { padding: 5px 10px; border-radius: 6px; color: #8a90a0; margin-bottom: 3px; position: relative; }
 .gw .gs .tab.on { background: #1c1e27; color: #e2e5ec; font-weight: 700; }
-.gw .gs .tab.on::before { content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 2px; background: #568cff; }
+.gw .gs .tab.on::before { content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 2px; background: #eab308; }
 .gw .gp { flex: 1; padding: 12px 14px; }
 .gw .gp h5 { margin: 0 0 10px; font-size: 14px; }
 .gw .row { height: 29px; background: #1c1e27; border-radius: 6px; margin-bottom: 6px; display: flex; align-items: center; padding: 0 10px; justify-content: space-between; }
-.gw .sw { width: 30px; height: 15px; border-radius: 8px; background: #568cff; position: relative; }
-.gw .sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+.gw .sw { width: 30px; height: 15px; border-radius: 8px; background: #eab308; position: relative; }
+.gw .sw::after { content: ""; position: absolute; right: 2px; top: 2px; width: 11px; height: 11px; border-radius: 50%; background: #14161c; }
 .gw .sw.off { background: #2c2f3c; } .gw .sw.off::after { right: auto; left: 2px; background: #8a90a0; }
 .gw .sl { height: 40px; flex-direction: column; align-items: stretch; justify-content: center; gap: 6px; }
 .gw .sl .l { display: flex; justify-content: space-between; } .gw .sl .l span { color: #8a90a0; }
-.gw .tr { height: 5px; border-radius: 3px; background: #2c2f3c; position: relative; } .gw .tr i { position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: #568cff; border-radius: 3px; }
-.gw .sec { color: #568cff; font-weight: 700; font-size: 10px; letter-spacing: .05em; margin: 2px 0 7px; }
+.gw .tr { height: 5px; border-radius: 3px; background: #2c2f3c; position: relative; } .gw .tr i { position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: #eab308; border-radius: 3px; }
+.gw .sec { color: #eab308; font-weight: 700; font-size: 10px; letter-spacing: .05em; margin: 2px 0 7px; }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 18px 0; }
 .card { display: block; padding: 16px; border-radius: var(--r-tile); color: var(--txt); background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); transition: background .2s, border-color .2s, transform .2s; }
 .card:hover { background: rgba(255,255,255,.08); border-color: rgba(122,168,255,.35); text-decoration: none; transform: translateY(-2px); }
@@ -283,13 +283,13 @@ td:first-child code { white-space: nowrap; }
 <div class="glass-field" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
 <header class="nav">
-  <a class="nav-brand" href="#/"><span class="nav-logo"></span>GainUI</a>
+  <a class="nav-brand" href="#/"><span class="nav-logo"></span>Nova</a>
   <span class="nav-sub">Drawn GUIs for Matcha</span>
   <div class="nav-right">
     <button class="search-pill glass" id="searchBtn" aria-label="Search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="label">Search the docs</span><kbd>Ctrl K</kbd></button>
     <div class="page-menu nav-mcp"><button class="btn ai-btn" id="aiBtn" aria-haspopup="true" title="Connect your AI to these docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span class="ai-label">MCP</span><span class="caret">▾</span></button>
       <div class="menu glass" id="mcpMenu">
-        <div class="menu-head">Connect your AI<small>It learns GainUI and Matcha from these docs.</small></div>
+        <div class="menu-head">Connect your AI<small>It learns Nova and Matcha from these docs.</small></div>
         <button data-mcp="url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg><span>Copy MCP server URL<small>Paste it into any MCP client</small></span></button>
         <hr>
         <button data-mcp="claude-code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></svg><span>Claude Code<small>Copies the command to run in a terminal</small></span></button>
@@ -299,14 +299,14 @@ td:first-child code { white-space: nowrap; }
         <hr>
         <a href="llms.txt" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6.1H3M21 12.1H3M15.1 18H3"/></svg><span>View llms.txt<small>Everything the AI reads, as one file</small></span></a>
       </div></div>
-    <a class="btn" href="https://github.com/Martinikaws/GainUI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg><span class="gh-label">GitHub</span></a>
+    <a class="btn" href="https://github.com/Martinikaws/Nova" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg><span class="gh-label">GitHub</span></a>
   </div>
 </header>
 
 <div class="page-wrap">
   <div class="dash-top">
     <nav class="dash-switch glass" id="groups"></nav>
-    <div class="version"><span class="dot"></span>GainUI 1.0.0</div>
+    <div class="version"><span class="dot"></span>Nova 1.0.0</div>
   </div>
   <div class="pills" id="pills"></div>
   <article class="sheet glass" id="doc"></article>
@@ -324,10 +324,10 @@ td:first-child code { white-space: nowrap; }
 <div class="sd" id="sd"><div class="sbox glass"><input id="sq" placeholder="Search the docs..." autocomplete="off"><div class="sres" id="sres"></div></div></div>
 
 <script>
-const RAW = "https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua";
-const LOAD = `local GainUI = loadstring(game:HttpGet("${RAW}"))() or _G.GainUI`;
-const UPDATED = "Updated for GainUI 1.0.0";
-const SHOWCASE = `loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()`;
+const RAW = "https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua";
+const LOAD = `local Nova = loadstring(game:HttpGet("${RAW}"))() or _G.Nova`;
+const UPDATED = "Updated for Nova 1.0.0";
+const SHOWCASE = `loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/showcase.lua"))()`;
 
 // Icons (lucide-style strokes)
 const I = {
@@ -367,16 +367,16 @@ const c = s => `<code>${esc(s)}</code>`;
 const ELEMENT_RETURNS = `<p>Returns the element. Keep it to change it later: ${c(":Set(value)")}, ${c(":Get()")}, ${c(".Value")}; see <a href="#/elements/methods">Element methods</a>.</p>`;
 
 const PAGES = [
-  { group: "Introduction", id: "", title: "Getting Started", icon: "book", lead: "A drawn GUI library for Matcha. Build a Gain-style window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.",
+  { group: "Introduction", id: "", title: "Getting Started", icon: "book", lead: "A drawn GUI library for Matcha. Build a clean, modern window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.",
     body: () => `
 <h2 id="install">Install</h2>
 <p>Load the library at the top of your script. There's nothing to download: it always runs the latest version from GitHub.</p>
 ${code(LOAD)}
-${hint(`Why ${c("or _G.GainUI")}? Matcha's ${c("loadstring")} drops return values, so GainUI also puts itself in ${c("_G.GainUI")}. This line works in Matcha and in executors that do return.`)}
+${hint(`Why ${c("or _G.Nova")}? Matcha's ${c("loadstring")} drops return values, so Nova also puts itself in ${c("_G.Nova")}. This line works in Matcha and in executors that do return.`)}
 <h2 id="first-window">Your first window</h2>
 ${code(`${LOAD}
 
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     Subtitle = "v1.0",
     ConfigName = "myscript", -- remembers every flagged value between runs
@@ -413,10 +413,10 @@ end})`)}
     body: () => `<h2 id="showcase">Showcase</h2>
 <p>One line in Matcha opens a window that demonstrates everything: every element, the methods that change them from code, the window's own methods, labels and images, and scrolling. What you change shows up live, and the values are saved between runs.</p>
 ${code(SHOWCASE)}
-${hint(`Right Shift shows and hides it. Its source is <a href="https://github.com/Martinikaws/GainUI/blob/main/showcase.lua" target="_blank" rel="noopener">showcase.lua</a>, a good place to copy from.`)}
+${hint(`Right Shift shows and hides it. Its source is <a href="https://github.com/Martinikaws/Nova/blob/main/showcase.lua" target="_blank" rel="noopener">showcase.lua</a>, a good place to copy from.`)}
 <h2 id="example">A short example</h2>` + code(`${LOAD}
 
-local Window = GainUI:CreateWindow({Title = "GainUI", Subtitle = "Example", ConfigName = "example"})
+local Window = Nova:CreateWindow({Title = "Nova", Subtitle = "Example", ConfigName = "example"})
 
 local Main = Window:Tab("Main")
 Main:Section("Basics")
@@ -445,23 +445,23 @@ Extra:Colorpicker({Name = "Box color", Default = Color3.fromRGB(255, 80, 80), Fl
     Callback = function(c) print(c) end})
 Extra:Paragraph({Title = "About", Content = "Long tabs scroll: drag the page or its bar, or use Page Up / Page Down."})
 
-print("Speed is", GainUI.Flags.Speed.Value)`) + `<p>The same file is in the repository as <a href="https://github.com/Martinikaws/GainUI/blob/main/example.lua" target="_blank" rel="noopener">example.lua</a>.</p>` },
+print("Speed is", Nova.Flags.Speed.Value)`) + `<p>The same file is in the repository as <a href="https://github.com/Martinikaws/Nova/blob/main/example.lua" target="_blank" rel="noopener">example.lua</a>.</p>` },
 
   { group: "Window", id: "window/create", title: "CreateWindow", icon: "window", lead: "Makes a window and returns it. A script can make more than one.",
-    body: () => sig("GainUI:CreateWindow(options: table) -> Window") + code(`local Window = GainUI:CreateWindow({
+    body: () => sig("Nova:CreateWindow(options: table) -> Window") + code(`local Window = Nova:CreateWindow({
     Title = "My Script",
     Subtitle = "v1.0",
     ConfigName = "myscript",
     ToggleKey = "RightShift",
-    Accent = "568cff",
+    Accent = "eab308",
     Size = {620, 460},
 })`) + `<h2 id="options">Options</h2>` + opts([
-      [c("Title"), "string", c('"GainUI"'), "Shown at the top of the sidebar."],
+      [c("Title"), "string", c('"Nova"'), "Shown at the top of the sidebar."],
       [c("Subtitle"), "string", "none", "A smaller line under the title, in the accent color."],
       [c("ConfigName"), "string", "none", `Saves flagged elements to ${c("Folder/ConfigName.json")}. Without it nothing is saved. See <a href="#/window/saving">Saving</a>.`],
-      [c("Folder"), "string", c('"GainUI"'), "The workspace folder settings are saved in."],
+      [c("Folder"), "string", c('"Nova"'), "The workspace folder settings are saved in."],
       [c("ToggleKey"), "key", c('"RightShift"'), `The key that shows and hides the window. See <a href="#/guides/keys">Key names</a>.`],
-      [c("Accent"), "hex / Color3", c('"568cff"'), "The highlight color. Users can change it in Settings."],
+      [c("Accent"), "hex / Color3", c('"eab308"') + " (yellow)", "The highlight color. Users can change it in Settings."],
       [c("Size"), "{w, h}", c("{620, 460}"), "Window size in pixels (at least 460 × 320). It shrinks to fit small screens."],
       [c("Open"), "boolean", c("true"), `Start shown. With ${c("false")}, the window waits for the toggle key.`],
       [c("Settings"), "boolean", c("true"), `Add the built-in Settings tab (show/hide key, accent, mouse offset, reset, unload).`],
@@ -490,13 +490,13 @@ print("Speed is", GainUI.Flags.Speed.Value)`) + `<p>The same file is in the repo
       [c("Window.Tabs"), "The tabs, in order."],
       [c("Window.SettingsTab"), "The built-in Settings tab. Add your own elements to it if you like."],
     ]) + `<h2 id="library">Library functions</h2>` + table(["Function", "Description"], [
-      [c("GainUI:CreateWindow(options)"), `Makes a window. Alias: ${c("GainUI:Window")}.`],
-      [c("GainUI:Notify(options)"), "A notification on the newest window."],
-      [c("GainUI:Destroy()"), "Destroys every window."],
-      [c("GainUI.Flags"), "Every flagged element from every window."],
-      [c("GainUI.Hex(hex) -> Color3"), `${c('"ff5050"')} to a Color3.`],
-      [c("GainUI.KeyLabel(key) -> string"), `How a key is shown, like ${c('"Right Shift"')}.`],
-      [c("GainUI.Version"), "The library version."],
+      [c("Nova:CreateWindow(options)"), `Makes a window. Alias: ${c("Nova:Window")}.`],
+      [c("Nova:Notify(options)"), "A notification on the newest window."],
+      [c("Nova:Destroy()"), "Destroys every window."],
+      [c("Nova.Flags"), "Every flagged element from every window."],
+      [c("Nova.Hex(hex) -> Color3"), `${c('"ff5050"')} to a Color3.`],
+      [c("Nova.KeyLabel(key) -> string"), `How a key is shown, like ${c('"Right Shift"')}.`],
+      [c("Nova.Version"), "The library version."],
     ]) },
 
   { group: "Window", id: "window/notify", title: "Notifications", icon: "bell", lead: "Short messages that slide in at the bottom right, even while the window is hidden.",
@@ -511,24 +511,24 @@ print("Speed is", GainUI.Flags.Speed.Value)`) + `<p>The same file is in the repo
     ]) + `<p>Up to five show at once; the oldest goes first. ${c('Window:Notify("Text")')} works too, using the text as the title.</p>` },
 
   { group: "Window", id: "window/saving", title: "Saving & Flags", icon: "save", lead: "Give an element a Flag and its value is saved and restored between runs.",
-    body: () => code(`local Window = GainUI:CreateWindow({Title = "My Script", ConfigName = "myscript"})
+    body: () => code(`local Window = Nova:CreateWindow({Title = "My Script", ConfigName = "myscript"})
 local Main = Window:Tab("Main")
 
 Main:Toggle({Name = "Enabled", Flag = "Enabled", Callback = function(on) ... end})
 
 -- anywhere later:
-if GainUI.Flags.Enabled.Value then ... end`) + `
+if Nova.Flags.Enabled.Value then ... end`) + `
 <h2 id="how">How it works</h2>
 <ul>
-<li>With a ${c("ConfigName")}, flagged values are written to ${c("GainUI/<ConfigName>.json")} in Matcha's workspace, a second after the last change and when the window is destroyed.</li>
+<li>With a ${c("ConfigName")}, flagged values are written to ${c("Nova/<ConfigName>.json")} in Matcha's workspace, a second after the last change and when the window is destroyed.</li>
 <li>When the script runs again, each flagged element starts from its saved value instead of its ${c("Default")}.</li>
 <li>For a restored value, the element's ${c("Callback")} runs once on the first frame, so your script applies it just like a click would. Keybinds are the exception: they only fire on a key press.</li>
 <li>The show/hide key, the accent and the mouse offset from the Settings tab are saved too.</li>
 </ul>
 <h2 id="flags">Reading flags</h2>
-<p>${c("GainUI.Flags[flag]")} (and ${c("Window.Flags[flag]")}) is the element itself, so you can read ${c(".Value")} or call ${c(":Set()")} from anywhere.</p>
-${code(`GainUI.Flags.Speed:Set(50)          -- moves the slider and runs its callback
-print(GainUI.Flags.Mode.Value)      -- "Balanced"`)}
+<p>${c("Nova.Flags[flag]")} (and ${c("Window.Flags[flag]")}) is the element itself, so you can read ${c(".Value")} or call ${c(":Set()")} from anywhere.</p>
+${code(`Nova.Flags.Speed:Set(50)          -- moves the slider and runs its callback
+print(Nova.Flags.Mode.Value)      -- "Balanced"`)}
 ${hint(`Flags must be unique across windows. Use a prefix like ${c('"MyScript_Speed"')} if several scripts share a session.`)}
 <h2 id="format">What gets saved</h2>
 ${table(["Element", "Saved as"], [
@@ -720,7 +720,7 @@ Info:Set("New title", "New content")  -- both`)}` },
       [c("el:SetText(text)"), "Labels only: changes the text."],
       [c("el:Refresh(options, keep?)"), "Dropdowns only: new options."],
       [c("el.Name / el.Flag / el.Kind"), `The label, the flag, and the kind (${c('"Toggle"')}, ${c('"Slider"')}, ...).`],
-    ]) + `<h2 id="aliases">Aliases</h2><p>If you're coming from another library, the familiar names work too:</p>` + table(["GainUI", "Also works"], [
+    ]) + `<h2 id="aliases">Aliases</h2><p>If you're coming from another library, the familiar names work too:</p>` + table(["Nova", "Also works"], [
       [c("Tab:Toggle"), `${c("AddToggle")}, ${c("CreateToggle")}`],
       [c("Tab:Textbox"), `${c("Input")}, ${c("AddInput")}, ${c("CreateInput")}, ${c("AddTextbox")}`],
       [c("Tab:Colorpicker"), `${c("ColorPicker")}, ${c("AddColorPicker")}, ${c("CreateColorPicker")}`],
@@ -742,7 +742,7 @@ ToggleKey = 0x2D               -- Windows key code`) + table(["Keys", "Names"], 
       ["None", `${c('"None"')}, ${c("nil")} or ${c("false")}`],
     ]) },
 
-  { group: "Guides", id: "guides/matcha", title: "How GainUI handles Matcha", icon: "wrench", lead: "What GainUI does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.",
+  { group: "Guides", id: "guides/matcha", title: "How Nova handles Matcha", icon: "wrench", lead: "What Nova does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.",
     body: () => `
 <h2 id="drawn">Everything is drawn</h2>
 <p>Matcha can't create instances, so there are no ScreenGuis. Every window is made of Drawing objects: squares, text, lines, circles and images. They're redrawn every frame from a pool, and a property is only written when it changes, so an idle window costs almost nothing.</p>
@@ -750,7 +750,7 @@ ToggleKey = 0x2D               -- Windows key code`) + table(["Keys", "Names"], 
 <ul>
 <li><b>No mouse wheel.</b> Matcha can't read it. Pages scroll by dragging them, dragging the scrollbar, or with <kbd>Page Up</kbd> / <kbd>Page Down</kbd> and the arrow keys while pointing at them.</li>
 <li><b>Clicks count on release.</b> So pressing and dragging scrolls instead of clicking whatever you started on.</li>
-<li><b>The game doesn't get your clicks.</b> While the mouse is over the window, or you're typing or binding a key, GainUI calls ${c("setrobloxinput(false)")}, and gives input back afterwards.</li>
+<li><b>The game doesn't get your clicks.</b> While the mouse is over the window, or you're typing or binding a key, Nova calls ${c("setrobloxinput(false)")}, and gives input back afterwards.</li>
 <li><b>Clicks land off?</b> Some setups report the mouse a few pixels away from where it's drawn. Users can fix it in <b>Settings → Mouse offset</b>, or you can set ${c("MouseOffset")}. The value is saved.</li>
 <li><b>Roblox must be focused.</b> Keys and clicks are read with ${c("iskeypressed")} and ${c("ismouse1pressed")}. They're ignored while another window is in front.</li>
 </ul>
@@ -758,12 +758,12 @@ ToggleKey = 0x2D               -- Windows key code`) + table(["Keys", "Names"], 
 <p>The window runs from a ${c("RenderStepped")} connection. That keeps it alive after your script finishes (in Matcha, a loop in a spawned thread can stop resuming). Callbacks run inside that step and are wrapped in ${c("pcall")}: an error is printed and the window keeps going.</p>
 ${hint(`Keep callbacks short. For anything that waits or loops, start your own thread: ${c("Callback = function(on) task.spawn(doLongThing, on) end")}. Button callbacks already get their own thread.`)}
 <h2 id="text">Text</h2>
-<p>Matcha draws text a little higher than its position. GainUI shifts it back, and measures text with ${c("TextBounds")} so long labels get trimmed with ".." instead of overflowing.</p>
+<p>Matcha draws text a little higher than its position. Nova shifts it back, and measures text with ${c("TextBounds")} so long labels get trimmed with ".." instead of overflowing.</p>
 <h2 id="unload">Unloading</h2>
 <p>${c("Window:Destroy()")} (or <b>Settings → Unload</b>) removes every drawing, disconnects the render step, gives input back to the game, saves flags and calls your ${c("OnUnload")}. Disconnect your own connections there.</p>
 ${code(`local conn = game:GetService("RunService").Heartbeat:Connect(function() ... end)
 
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     OnUnload = function()
         conn:Disconnect()
@@ -777,17 +777,17 @@ local Tab = Window:CreateTab("Main")
 Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
 Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})
 
--- GainUI: same element calls, a different window line
-local Window = GainUI:CreateWindow({Title = "My Script"})
+-- Nova: same element calls, a different window line
+local Window = Nova:CreateWindow({Title = "My Script"})
 local Tab = Window:CreateTab("Main")
 Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
-Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})`) + table(["Rayfield", "GainUI"], [
+Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})`) + table(["Rayfield", "Nova"], [
       [c("CreateWindow({Name})"), c("CreateWindow({Title})")],
       [c("ConfigurationSaving = {Enabled, FileName}"), c("ConfigName")],
-      [c("Rayfield:Notify({Title, Content, Duration})"), `${c("Window:Notify")} or ${c("GainUI:Notify")}`],
+      [c("Rayfield:Notify({Title, Content, Duration})"), `${c("Window:Notify")} or ${c("Nova:Notify")}`],
       [c("Flags[flag].CurrentValue"), c("Flags[flag].Value")],
       [c("Element:Set(v)"), `${c("Element:Set(v)")} (same)`],
-    ]) + hint("Icons, key systems and Discord invites aren't part of GainUI.", "warn") },
+    ]) + hint("Icons, key systems and Discord invites aren't part of Nova.", "warn") },
 ];
 
 
@@ -835,8 +835,8 @@ PAGES.push(
 <h2 id="rules">Rules that break scripts</h2>
 <ul>
 <li><b>Bindings are a fixed list.</b> Reading a property Matcha doesn't support doesn't error: it falls back to ${c("FindFirstChild")} and gives ${c("nil")}. An unexplained ${c("nil")} usually means "unsupported". <b>Writing</b> an unsupported property errors (${c("Unknown property")}).</li>
-<li><b>No instances.</b> There is no ${c("Instance.new")}, so no ScreenGuis, parts or sounds of your own. Draw UI with the <a href="#/matcha/drawing">Drawing library</a> (that's what GainUI does).</li>
-<li><b>${c("loadstring")} drops return values.</b> ${c('loadstring("return 5")()')} gives nothing, even through ${c("pcall")}. Share values through ${c("_G")} instead; there is no ${c("getgenv")} or ${c("shared")}. That's why GainUI loads with ${c("... or _G.GainUI")}.</li>
+<li><b>No instances.</b> There is no ${c("Instance.new")}, so no ScreenGuis, parts or sounds of your own. Draw UI with the <a href="#/matcha/drawing">Drawing library</a> (that's what Nova does).</li>
+<li><b>${c("loadstring")} drops return values.</b> ${c('loadstring("return 5")()')} gives nothing, even through ${c("pcall")}. Share values through ${c("_G")} instead; there is no ${c("getgenv")} or ${c("shared")}. That's why Nova loads with ${c("... or _G.Nova")}.</li>
 <li><b>Threads can stop.</b> A ${c("task.spawn")} loop that waits with ${c("task.wait")} can stop resuming once the script that started it has finished. For anything that must keep running, connect to ${c("RunService.Heartbeat")} or ${c("RenderStepped")} and throttle inside it.</li>
 <li><b>No mouse wheel.</b> ${c("UserInputService.InputChanged")} is ${c("nil")}; only ${c("InputBegan")} and ${c("InputEnded")} exist. Poll input instead: ${c("iskeypressed")}, ${c("ismouse1pressed")} and ${c("Player:GetMouse()")} (${c("Mouse.X")} / ${c("Mouse.Y")}).</li>
 <li><b>Roblox must be focused</b> for key and mouse input, including ${c("keypress")} and ${c("mouse1click")}. Check ${c("isrbxactive()")}.</li>
@@ -864,7 +864,7 @@ end)
 
 -- a value another script can reach (loadstring can't return it)
 _G.MyScript = {stop = function() conn:Disconnect() end}`)}
-${hint(`The Matcha-specific files: <a href="${MATCHA_DOCS}/llms-full.txt" target="_blank" rel="noopener">official docs as one text file</a>. Everything on these pages is also in GainUI's <a href="llms.txt" target="_blank">llms.txt</a>.`)}` },
+${hint(`The Matcha-specific files: <a href="${MATCHA_DOCS}/llms-full.txt" target="_blank" rel="noopener">official docs as one text file</a>. Everything on these pages is also in Nova's <a href="llms.txt" target="_blank">llms.txt</a>.`)}` },
 
   { group: "Matcha", id: "matcha/functions", title: "Functions", icon: "code",
     lead: "Every global function Matcha has, including the ones the official docs don't list yet.",
@@ -950,7 +950,7 @@ ${table(["Type", "Constructors and fields"], [
 ${hint(`Check before you rely on something: read it and print it. ${c("nil")} where you expected a value means Matcha doesn't bind it.`)}` },
 
   { group: "Matcha", id: "matcha/drawing", title: "Drawing", icon: "image",
-    lead: "Matcha's only way to put things on screen. Everything GainUI shows is made of these.",
+    lead: "Matcha's only way to put things on screen. Everything Nova shows is made of these.",
     body: () => sig("Drawing.new(kind: string) -> DrawingObject") + code(`local box = Drawing.new("Square")
 box.Position = Vector2.new(20, 20)
 box.Size = Vector2.new(200, 120)
@@ -988,7 +988,7 @@ GROUP_LABEL.Matcha = "Matcha";
 
 // Markdown copies of the pages, for AI tools: "Copy page", llms.txt and
 // llms-full.txt (tools/build-llms.js writes those from this same code).
-const SITE = "https://martinikaws.github.io/GainUI/";
+const SITE = "https://martinikaws.github.io/Nova/";
 const LLMS = SITE + "llms.txt", LLMS_FULL = SITE + "llms-full.txt";
 const mdName = id => (id || "index").replace(/\//g, "-") + ".md";
 const mdUrl = id => SITE + "md/" + mdName(id);
@@ -1033,19 +1033,19 @@ function htmlToMd(h) {
 function pageMarkdown(p) {
   return `# ${p.title}\n\n> ${p.lead}\n\n${htmlToMd(p.body())}\n`;
 }
-const LLMS_INTRO = `GainUI is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so GainUI draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
+const LLMS_INTRO = `Nova is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so Nova draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
 
-Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.GainUI):
+Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.Nova):
 
 \`\`\`lua
 ${LOAD}
 \`\`\`
 
-These docs cover GainUI and Matcha itself: the "Matcha" section lists what Matcha supports, what it doesn't, and the quirks that break scripts.
+These docs cover Nova and Matcha itself: the "Matcha" section lists what Matcha supports, what it doesn't, and the quirks that break scripts.
 
-Rules that matter when writing GainUI code:
-- Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
-- Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
+Rules that matter when writing Nova code:
+- Make a window with Nova:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
+- Give an element a Flag to save it; read it anywhere with Nova.Flags[flag].Value, and change it with :Set(value).
 - Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
 - Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
 - Clean up in the window's OnUnload option; Window:Destroy() removes everything.
@@ -1058,9 +1058,9 @@ Rules that matter for any Matcha script:
 - Input is polled: iskeypressed(vk), ismouse1pressed(), Player:GetMouse().X/Y; UserInputService.InputChanged doesn't exist (no mouse wheel).`;
 function llmsTxt() {
   const groups = [...new Set(PAGES.map(p => p.group))];
-  return `# GainUI\n\n> A drawn GUI library for Matcha (Roblox): Gain-style windows with tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.\n\n${LLMS_INTRO}\n\n` +
+  return `# Nova\n\n> A drawn GUI library for Matcha (Roblox): clean, modern windows with tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.\n\n${LLMS_INTRO}\n\n` +
     groups.map(g => `## ${g}\n\n` + PAGES.filter(p => p.group === g).map(p => `- [${p.title}](${mdUrl(p.id)}): ${p.lead}`).join("\n")).join("\n\n") +
-    `\n\n## Optional\n\n- [All docs in one file](${LLMS_FULL}): every page above, in order\n- [Matcha's official docs](https://matcha-latte.gitbook.io/matcha/llms-full.txt): the Matcha API as its authors document it\n- [Library source](${RAW}): GainUI.lua\n- [Example script](https://raw.githubusercontent.com/Martinikaws/GainUI/main/example.lua): every element once\n`;
+    `\n\n## Optional\n\n- [All docs in one file](${LLMS_FULL}): every page above, in order\n- [Matcha's official docs](https://matcha-latte.gitbook.io/matcha/llms-full.txt): the Matcha API as its authors document it\n- [Library source](${RAW}): Nova.lua\n- [Example script](https://raw.githubusercontent.com/Martinikaws/Nova/main/example.lua): every element once\n`;
 }
 // llms.txt carries the whole docs after its index: MCP servers like GitMCP
 // hand this one file to the AI first, so it learns everything in one read.
@@ -1068,7 +1068,7 @@ function llmsTxtFull() {
   return llmsTxt() + "\n\n# Full documentation\n\n" + PAGES.map(p => pageMarkdown(p).replace(/^# /, "---\n\n# ")).join("\n");
 }
 function llmsFull() {
-  return `# GainUI documentation\n\n${LLMS_INTRO}\n\n` + PAGES.map(p => pageMarkdown(p).replace(/^# /, "---\n\n# ")).join("\n");
+  return `# Nova documentation\n\n${LLMS_INTRO}\n\n` + PAGES.map(p => pageMarkdown(p).replace(/^# /, "---\n\n# ")).join("\n");
 }
 
 // Routing & rendering
@@ -1114,7 +1114,7 @@ function slug(t) { return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^
 function heroHead(page) {
   return `<div class="hero">
     <div>
-      <h1>Gain-style windows, <em>drawn for Matcha</em></h1>
+      <h1>Clean, modern windows, <em>drawn for Matcha</em></h1>
       <p class="lead">${page.lead}</p>
       <div class="hero-actions"><button class="btn primary" data-copy-loader>Copy loader</button><button class="btn" data-copy-showcase>Copy the showcase</button><a class="btn" href="#/start/example">Examples</a></div>
     </div>
@@ -1177,7 +1177,7 @@ function render() {
   doc.querySelectorAll("h3").forEach(h => { h.id = h.id || slug(h.textContent); });
   bindTiles();
   renderNav(page);
-  document.title = page.id ? `${page.title} | GainUI` : "GainUI - drawn GUIs for Matcha";
+  document.title = page.id ? `${page.title} | Nova` : "Nova - drawn GUIs for Matcha";
   if (anchor) { const t = document.getElementById(anchor); if (t) { t.scrollIntoView(); return; } }
   window.scrollTo(0, 0);
 }
@@ -1206,14 +1206,14 @@ document.getElementById("loaderText").textContent = LOAD;
 
 // MCP: GitMCP serves this site's llms.txt as a remote MCP server, so one URL
 // is all an AI tool needs.
-const MCP_URL = "https://martinikaws.gitmcp.io/GainUI";
+const MCP_URL = "https://martinikaws.gitmcp.io/Nova";
 function copyMcp() { copy(MCP_URL, "MCP server URL copied - add it as a custom MCP server"); }
 const MCP_COPY = {
   url: [MCP_URL, "MCP server URL copied - paste it into your AI's MCP settings"],
-  "claude-code": [`claude mcp add --transport http --scope user gainui-docs ${MCP_URL}`, "Claude Code command copied - run it in a terminal"],
+  "claude-code": [`claude mcp add --transport http --scope user nova-docs ${MCP_URL}`, "Claude Code command copied - run it in a terminal"],
   claude: [MCP_URL, "URL copied - Claude: Settings → Connectors → Add custom connector"],
-  cursor: [JSON.stringify({mcpServers: {"gainui-docs": {url: MCP_URL}}}, null, 2), "Cursor config copied - merge it into .cursor/mcp.json"],
-  vscode: [JSON.stringify({servers: {"gainui-docs": {type: "http", url: MCP_URL}}}, null, 2), "VS Code config copied - merge it into .vscode/mcp.json"],
+  cursor: [JSON.stringify({mcpServers: {"nova-docs": {url: MCP_URL}}}, null, 2), "Cursor config copied - merge it into .cursor/mcp.json"],
+  vscode: [JSON.stringify({servers: {"nova-docs": {type: "http", url: MCP_URL}}}, null, 2), "VS Code config copied - merge it into .vscode/mcp.json"],
 };
 const mcpMenu = document.getElementById("mcpMenu");
 document.getElementById("aiBtn").addEventListener("click", e => { e.stopPropagation(); mcpMenu.classList.toggle("open"); });
@@ -1223,7 +1223,7 @@ mcpMenu.querySelectorAll("[data-mcp]").forEach(b => b.addEventListener("click", 
   mcpMenu.classList.remove("open");
 }));
 function askUrl(site, page) {
-  const prompt = `Read ${mdUrl(page.id)} (GainUI docs: a drawn GUI library for the Matcha Roblox executor; everything is in ${LLMS_FULL}). Then help me with it.`;
+  const prompt = `Read ${mdUrl(page.id)} (Nova docs: a drawn GUI library for the Matcha Roblox executor; everything is in ${LLMS_FULL}). Then help me with it.`;
   return (site === "claude" ? "https://claude.ai/new?q=" : "https://chatgpt.com/?q=") + encodeURIComponent(prompt);
 }
 function bindPageMenu(page) {

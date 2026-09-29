@@ -17,7 +17,7 @@
 
 If you're coming from another library, the familiar names work too:
 
-| GainUI | Also works |
+| Nova | Also works |
 | --- | --- |
 | `Tab:Toggle` | `AddToggle`, `CreateToggle` |
 | `Tab:Textbox` | `Input`, `AddInput`, `CreateInput`, `AddTextbox` |

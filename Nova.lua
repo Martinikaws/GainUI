@@ -1,7 +1,7 @@
 --[[
-    GainUI - a drawn GUI library for Matcha
-    Docs:   https://martinikaws.github.io/GainUI/
-    Source: https://github.com/Martinikaws/GainUI
+    Nova - a drawn GUI library for Matcha
+    Docs:   https://martinikaws.github.io/Nova/
+    Source: https://github.com/Martinikaws/Nova
 
     Matcha can't create instances, so every window is Drawing objects redrawn
     each frame from a pool (only properties that changed are written). Input is
@@ -9,15 +9,15 @@
     through iskeypressed. Clicks count on release, so pressing and dragging a
     list scrolls it instead (Matcha can't read the mouse wheel).
 
-    local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
-    local Window = GainUI:CreateWindow({Title = "My Script"})
+    local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
+    local Window = Nova:CreateWindow({Title = "My Script"})
     local Main = Window:Tab("Main")
     Main:Toggle({Name = "Enabled", Default = false, Callback = function(on) print(on) end})
 ]]
 
-local GainUI = {Version = "1.0.0", Flags = {}, Windows = {}}
+local Nova = {Version = "1.0.0", Flags = {}, Windows = {}}
 
-assert(Drawing and type(Drawing.new) == "function", "GainUI needs Matcha's Drawing library.")
+assert(Drawing and type(Drawing.new) == "function", "Nova needs Matcha's Drawing library.")
 
 local V2, RGB = Vector2.new, Color3.fromRGB
 local RunService = game:GetService("RunService")
@@ -78,7 +78,7 @@ local function toVK(key)
     return VK[key] or VK[key:gsub("%s", "")] or VK[key:upper()]
 end
 local function keyLabel(vk) return vk and (KEY_LABEL[vk] or ("Key " .. vk)) or "None" end
-GainUI.KeyLabel = function(key) return keyLabel(toVK(key)) end
+Nova.KeyLabel = function(key) return keyLabel(toVK(key)) end
 
 -- Characters typed into a text box: key code -> {plain, shifted}.
 local TYPED = {}
@@ -136,10 +136,10 @@ local function toColor(c)
     if type(c) == "table" and c.R then return Color3.new(c.R, c.G, c.B) end
     return nil
 end
-GainUI.Hex = hexToColor
+Nova.Hex = hexToColor
 
-local ACCENTS = {"568cff", "8b5cf6", "ec4899", "ef4444", "f97316", "eab308", "22c55e", "14b8a6", "06b6d4", "e5e7eb"}
-GainUI.Accents = ACCENTS
+local ACCENTS = {"eab308", "f97316", "ef4444", "ec4899", "8b5cf6", "568cff", "06b6d4", "14b8a6", "22c55e", "e5e7eb"}
+Nova.Accents = ACCENTS
 
 -- Saving ---------------------------------------------------------------------
 
@@ -178,13 +178,13 @@ local function hasFileApi() return type(writefile) == "function" and type(readfi
 
 -- Window ---------------------------------------------------------------------
 
-function GainUI:CreateWindow(opts)
+function Nova:CreateWindow(opts)
     opts = opts or {}
     local Window = {Flags = {}, Tabs = {}}
-    local title = tostring(opts.Title or "GainUI")
+    local title = tostring(opts.Title or "Nova")
     local subtitle = opts.Subtitle and tostring(opts.Subtitle) or nil
     local configName = opts.ConfigName and tostring(opts.ConfigName):gsub("[^%w%-_ ]", "") or nil
-    local folder = tostring(opts.Folder or "GainUI")
+    local folder = tostring(opts.Folder or "Nova")
     local configFile = configName and (folder .. "/" .. configName .. ".json") or nil
     local toggleVK = toVK(opts.ToggleKey or "RightShift") or 0xA1
     local mouseOffset = tonumber(opts.MouseOffset) or 0
@@ -219,14 +219,14 @@ function GainUI:CreateWindow(opts)
     end
     local accentHex
     local function applyAccent(value)
-        local c = toColor(value) or hexToColor("568cff")
+        local c = toColor(value) or hexToColor("eab308")
         accentHex = colorToHex(c)
         C.accent = c
         C.accentDim = Color3.new(c.R * 0.42, c.G * 0.42, c.B * 0.42)
         C.accentHot = Color3.new(math.min(1, c.R + 0.08), math.min(1, c.G + 0.08), math.min(1, c.B + 0.08))
         C.onAccent = (0.299 * c.R + 0.587 * c.G + 0.114 * c.B > 0.62) and RGB(20, 22, 28) or RGB(255, 255, 255)
     end
-    applyAccent(opts.Accent or "568cff")
+    applyAccent(opts.Accent or "eab308") -- yellow
 
     -- Saving flags: a second after the last change.
     local saveAt
@@ -542,7 +542,7 @@ function GainUI:CreateWindow(opts)
     local function callback(el, ...)
         if type(el.Callback) == "function" then
             local ok, err = pcall(el.Callback, ...)
-            if not ok then log("[GainUI] " .. tostring(el.Name) .. ": " .. tostring(err)) end
+            if not ok then log("[Nova] " .. tostring(el.Name) .. ": " .. tostring(err)) end
         end
     end
     -- An element's starting value: its saved flag, else its default. With a
@@ -557,7 +557,7 @@ function GainUI:CreateWindow(opts)
     end
     local pendingLoad = {}
     local function register(el)
-        if el.Flag then Window.Flags[el.Flag] = el; GainUI.Flags[el.Flag] = el end
+        if el.Flag then Window.Flags[el.Flag] = el; Nova.Flags[el.Flag] = el end
         -- (on the next frame, so the script has finished setting up)
         if el.loaded then pendingLoad[#pendingLoad + 1] = el end
     end
@@ -1054,7 +1054,7 @@ function GainUI:CreateWindow(opts)
             end})
         end
         settings:Button({Name = "Unload", Callback = function() Window:Destroy() end})
-        settings:Label({Text = "Made with GainUI " .. GainUI.Version, Color = C.faint})
+        settings:Label({Text = "Made with Nova " .. Nova.Version, Color = C.faint})
         Window.SettingsTab = settings
         current = nil
     end
@@ -1304,7 +1304,7 @@ function GainUI:CreateWindow(opts)
         local ok, err = pcall(frame)
         if not ok and tostring(err) ~= lastError then
             lastError = tostring(err)
-            log("[GainUI] " .. lastError)
+            log("[Nova] " .. lastError)
         end
     end
     -- A connection keeps firing after the script that made it has finished
@@ -1323,8 +1323,8 @@ function GainUI:CreateWindow(opts)
         if conn then pcall(function() conn:Disconnect() end) end
         pcall(wipe)
         if type(setrobloxinput) == "function" then pcall(setrobloxinput, true) end
-        for flag, el in pairs(self.Flags) do if GainUI.Flags[flag] == el then GainUI.Flags[flag] = nil end end
-        for i, w in ipairs(GainUI.Windows) do if w == self then table.remove(GainUI.Windows, i) break end end
+        for flag, el in pairs(self.Flags) do if Nova.Flags[flag] == el then Nova.Flags[flag] = nil end end
+        for i, w in ipairs(Nova.Windows) do if w == self then table.remove(Nova.Windows, i) break end end
         if type(opts.OnUnload) == "function" then pcall(opts.OnUnload) end
     end
     Window.Unload = Window.Destroy
@@ -1338,20 +1338,20 @@ function GainUI:CreateWindow(opts)
         return table.concat(out, "\n")
     end
 
-    GainUI.Windows[#GainUI.Windows + 1] = Window
+    Nova.Windows[#Nova.Windows + 1] = Window
     return Window
 end
-GainUI.Window = GainUI.CreateWindow
+Nova.Window = Nova.CreateWindow
 
-function GainUI:Notify(o)
+function Nova:Notify(o)
     local w = self.Windows[#self.Windows]
     if w then w:Notify(o) end
 end
-function GainUI:Destroy()
+function Nova:Destroy()
     for i = #self.Windows, 1, -1 do self.Windows[i]:Destroy() end
 end
 
 -- Matcha's loadstring drops return values, so the library is also left in
--- _G: `loadstring(...)() or _G.GainUI` works everywhere.
-_G.GainUI = GainUI
-return GainUI
+-- _G: `loadstring(...)() or _G.Nova` works everywhere.
+_G.Nova = Nova
+return Nova

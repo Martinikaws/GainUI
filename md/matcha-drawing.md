@@ -1,6 +1,6 @@
 # Drawing
 
-> Matcha's only way to put things on screen. Everything GainUI shows is made of these.
+> Matcha's only way to put things on screen. Everything Nova shows is made of these.
 
 ```lua
 Drawing.new(kind: string) -> DrawingObject

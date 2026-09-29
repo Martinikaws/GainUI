@@ -3,16 +3,16 @@
 > Makes a window and returns it. A script can make more than one.
 
 ```lua
-GainUI:CreateWindow(options: table) -> Window
+Nova:CreateWindow(options: table) -> Window
 ```
 
 ```lua
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     Subtitle = "v1.0",
     ConfigName = "myscript",
     ToggleKey = "RightShift",
-    Accent = "568cff",
+    Accent = "eab308",
     Size = {620, 460},
 })
 ```
@@ -21,12 +21,12 @@ local Window = GainUI:CreateWindow({
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `Title` | string | `"GainUI"` | Shown at the top of the sidebar. |
+| `Title` | string | `"Nova"` | Shown at the top of the sidebar. |
 | `Subtitle` | string | none | A smaller line under the title, in the accent color. |
-| `ConfigName` | string | none | Saves flagged elements to `Folder/ConfigName.json`. Without it nothing is saved. See [Saving](https://martinikaws.github.io/GainUI/md/window-saving.md). |
-| `Folder` | string | `"GainUI"` | The workspace folder settings are saved in. |
-| `ToggleKey` | key | `"RightShift"` | The key that shows and hides the window. See [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md). |
-| `Accent` | hex / Color3 | `"568cff"` | The highlight color. Users can change it in Settings. |
+| `ConfigName` | string | none | Saves flagged elements to `Folder/ConfigName.json`. Without it nothing is saved. See [Saving](https://martinikaws.github.io/Nova/md/window-saving.md). |
+| `Folder` | string | `"Nova"` | The workspace folder settings are saved in. |
+| `ToggleKey` | key | `"RightShift"` | The key that shows and hides the window. See [Key names](https://martinikaws.github.io/Nova/md/guides-keys.md). |
+| `Accent` | hex / Color3 | `"eab308"` (yellow) | The highlight color. Users can change it in Settings. |
 | `Size` | {w, h} | `{620, 460}` | Window size in pixels (at least 460 × 320). It shrinks to fit small screens. |
 | `Open` | boolean | `true` | Start shown. With `false`, the window waits for the toggle key. |
 | `Settings` | boolean | `true` | Add the built-in Settings tab (show/hide key, accent, mouse offset, reset, unload). |

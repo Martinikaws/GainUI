@@ -7,17 +7,17 @@
 One line in Matcha opens a window that demonstrates everything: every element, the methods that change them from code, the window's own methods, labels and images, and scrolling. What you change shows up live, and the values are saved between runs.
 
 ```lua
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/showcase.lua"))()
 ```
 
-> **Note:** Right Shift shows and hides it. Its source is [showcase.lua](https://github.com/Martinikaws/GainUI/blob/main/showcase.lua), a good place to copy from.
+> **Note:** Right Shift shows and hides it. Its source is [showcase.lua](https://github.com/Martinikaws/Nova/blob/main/showcase.lua), a good place to copy from.
 
 ## A short example
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 
-local Window = GainUI:CreateWindow({Title = "GainUI", Subtitle = "Example", ConfigName = "example"})
+local Window = Nova:CreateWindow({Title = "Nova", Subtitle = "Example", ConfigName = "example"})
 
 local Main = Window:Tab("Main")
 Main:Section("Basics")
@@ -46,7 +46,7 @@ Extra:Colorpicker({Name = "Box color", Default = Color3.fromRGB(255, 80, 80), Fl
     Callback = function(c) print(c) end})
 Extra:Paragraph({Title = "About", Content = "Long tabs scroll: drag the page or its bar, or use Page Up / Page Down."})
 
-print("Speed is", GainUI.Flags.Speed.Value)
+print("Speed is", Nova.Flags.Speed.Value)
 ```
 
-The same file is in the repository as [example.lua](https://github.com/Martinikaws/GainUI/blob/main/example.lua).
+The same file is in the repository as [example.lua](https://github.com/Martinikaws/Nova/blob/main/example.lua).

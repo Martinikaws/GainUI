@@ -27,6 +27,6 @@ Main:Textbox({
 | `Flag` | string | none | Saves the text. |
 | `Callback` | function(text) | none | Runs when typing ends: `Enter`, `Esc`, or clicking somewhere else. |
 
-Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/Nova/md/elements-methods.md).
 
 > **Note:** While a box is focused, typing goes to it and not to the game, and the show/hide key doesn't work. Letters, digits, space and common symbols are supported, with `Shift` for capitals; hold `Backspace` to delete quickly.

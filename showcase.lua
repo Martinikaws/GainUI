@@ -1,28 +1,28 @@
--- GainUI showcase: every element and method, live, in one window.
+-- Nova showcase: every element and method, live, in one window.
 -- Run it in Matcha:
---   loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()
+--   loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/showcase.lua"))()
 -- Right Shift shows and hides it. Settings (last tab) has the accent, key and Unload.
 
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 
 -- A second run replaces the first.
-if _G.GainUIShowcase then pcall(function() _G.GainUIShowcase:Destroy() end) end
+if _G.NovaShowcase then pcall(function() _G.NovaShowcase:Destroy() end) end
 
 local connections = {}
-local Window = GainUI:CreateWindow({
-    Title = "GainUI",
+local Window = Nova:CreateWindow({
+    Title = "Nova",
     Subtitle = "Showcase",
-    ConfigName = "showcase", -- flagged values are saved to GainUI/showcase.json
+    ConfigName = "showcase", -- flagged values are saved to Nova/showcase.json
     ToggleKey = "RightShift",
-    Accent = "568cff",
+    Accent = "eab308",
     Size = {680, 500},
     OnUnload = function()
         for _, c in ipairs(connections) do pcall(function() c:Disconnect() end) end
-        _G.GainUIShowcase = nil
-        print("[GainUI showcase] unloaded")
+        _G.NovaShowcase = nil
+        print("[Nova showcase] unloaded")
     end,
 })
-_G.GainUIShowcase = Window
+_G.NovaShowcase = Window
 
 local function hex(c)
     return string.format("#%02x%02x%02x", math.floor(c.R * 255 + 0.5), math.floor(c.G * 255 + 0.5), math.floor(c.B * 255 + 0.5))
@@ -31,14 +31,14 @@ end
 -- Welcome ----------------------------------------------------------------------
 local Home = Window:Tab("Welcome")
 Home:Paragraph({
-    Title = "Welcome to GainUI",
+    Title = "Welcome to Nova",
     Content = "Each tab shows part of the library. Click, drag, type and rebind things: everything here works. "
         .. "Right Shift hides the window, and the Settings tab at the bottom changes the accent and the key.",
 })
 Home:Section("Live")
 local fpsLabel = Home:Label("FPS: ...")
 local mouseLabel = Home:Label("Mouse: ...")
-Home:Label("Executor: " .. (identifyexecutor and table.concat({identifyexecutor()}, " ") or "unknown") .. "  -  GainUI " .. GainUI.Version)
+Home:Label("Executor: " .. (identifyexecutor and table.concat({identifyexecutor()}, " ") or "unknown") .. "  -  Nova " .. Nova.Version)
 Home:Section("Try it")
 Home:Button({Name = "Send a notification", Callback = function()
     Window:Notify({Title = "Hello!", Content = "Notifications stack at the bottom right and fade out on their own.", Duration = 4})
@@ -88,7 +88,7 @@ Controls:Section("Colorpicker")
 Controls:Colorpicker({Name = "A color", Default = Color3.fromRGB(255, 80, 80), Flag = "Showcase_Color",
     Callback = function(c) show("Color: " .. hex(c)) end})
 Controls:Button({Name = "Use that color as the accent", Callback = function()
-    Window:SetAccent(GainUI.Flags.Showcase_Color.Value)
+    Window:SetAccent(Nova.Flags.Showcase_Color.Value)
 end})
 
 -- Methods: changing elements from code ---------------------------------------------
@@ -117,8 +117,8 @@ Methods:Button({Name = "Print every saved flag", Callback = function()
         local v = element.Value
         if typeof and typeof(v) == "Color3" then v = hex(v)
         elseif type(v) == "table" then v = "{" .. table.concat(v, ", ") .. "}"
-        elseif element.Kind == "Keybind" then v = GainUI.KeyLabel(v) end
-        print(("[GainUI showcase] %s = %s"):format(flag, tostring(v)))
+        elseif element.Kind == "Keybind" then v = Nova.KeyLabel(v) end
+        print(("[Nova showcase] %s = %s"):format(flag, tostring(v)))
     end
     Window:Notify({Title = "Printed", Content = "Every flag is in the console."})
 end})
@@ -126,15 +126,15 @@ end})
 -- Window: the window's own methods --------------------------------------------------
 local Win = Window:Tab("Window")
 Win:Section("Look")
-local titles, t = {"GainUI", "My Script", "Showcase", "Hello"}, 1
+local titles, t = {"Nova", "My Script", "Showcase", "Hello"}, 1
 Win:Button({Name = "Window:SetTitle(...)", Callback = function()
     t = t % #titles + 1
     Window:SetTitle(titles[t], "Title " .. t .. " of " .. #titles)
 end})
 local accent = 1
 Win:Button({Name = "Window:SetAccent(next color)", Callback = function()
-    accent = accent % #GainUI.Accents + 1
-    Window:SetAccent(GainUI.Accents[accent])
+    accent = accent % #Nova.Accents + 1
+    Window:SetAccent(Nova.Accents[accent])
 end})
 Win:Section("Keys and visibility")
 Win:Button({Name = "Window:SetToggleKey(\"Insert\")", Callback = function()
@@ -145,7 +145,7 @@ Win:Button({Name = "Window:Toggle(false)  (press the key to come back)", Callbac
 Win:Section("Saving")
 Win:Button({Name = "Window:Save()", Callback = function()
     Window:Save()
-    Window:Notify({Title = "Saved", Content = "Flags written to GainUI/showcase.json in the workspace."})
+    Window:Notify({Title = "Saved", Content = "Flags written to Nova/showcase.json in the workspace."})
 end})
 Win:Button({Name = "Window:Dump()  (prints what's on screen)", Callback = function() print(Window:Dump()) end})
 
@@ -185,4 +185,4 @@ pcall(function()
     end)
 end)
 
-Window:Notify({Title = "GainUI showcase", Content = "Right Shift shows and hides the window.", Duration = 5})
+Window:Notify({Title = "Nova showcase", Content = "Right Shift shows and hides the window.", Duration = 5})

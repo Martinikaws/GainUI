@@ -1,23 +1,23 @@
 # Getting Started
 
-> A drawn GUI library for Matcha. Build a Gain-style window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.
+> A drawn GUI library for Matcha. Build a clean, modern window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.
 
 ## Install
 
 Load the library at the top of your script. There's nothing to download: it always runs the latest version from GitHub.
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 ```
 
-> **Note:** Why `or _G.GainUI`? Matcha's `loadstring` drops return values, so GainUI also puts itself in `_G.GainUI`. This line works in Matcha and in executors that do return.
+> **Note:** Why `or _G.Nova`? Matcha's `loadstring` drops return values, so Nova also puts itself in `_G.Nova`. This line works in Matcha and in executors that do return.
 
 ## Your first window
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+local Nova = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/Nova/main/Nova.lua"))() or _G.Nova
 
-local Window = GainUI:CreateWindow({
+local Window = Nova:CreateWindow({
     Title = "My Script",
     Subtitle = "v1.0",
     ConfigName = "myscript", -- remembers every flagged value between runs
@@ -47,7 +47,7 @@ Press `Right Shift` to show or hide the window. Drag it by the title. Every wind
 
 ## Next steps
 
-- [Window](https://martinikaws.github.io/GainUI/md/window-create.md): Title, size, accent, keys and saving.
-- [Elements](https://martinikaws.github.io/GainUI/md/elements-toggle.md): Every control you can put in a tab.
-- [Matcha](https://martinikaws.github.io/GainUI/md/matcha.md): What Matcha supports, and the quirks that break scripts.
-- [Full example](https://martinikaws.github.io/GainUI/md/start-example.md): Every element in one script.
+- [Window](https://martinikaws.github.io/Nova/md/window-create.md): Title, size, accent, keys and saving.
+- [Elements](https://martinikaws.github.io/Nova/md/elements-toggle.md): Every control you can put in a tab.
+- [Matcha](https://martinikaws.github.io/Nova/md/matcha.md): What Matcha supports, and the quirks that break scripts.
+- [Full example](https://martinikaws.github.io/Nova/md/start-example.md): Every element in one script.
