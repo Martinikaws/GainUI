@@ -9,7 +9,7 @@
     through iskeypressed. Clicks count on release, so pressing and dragging a
     list scrolls it instead (Matcha can't read the mouse wheel).
 
-    local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))()
+    local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
     local Window = GainUI:CreateWindow({Title = "My Script"})
     local Main = Window:Tab("Main")
     Main:Toggle({Name = "Enabled", Default = false, Callback = function(on) print(on) end})
@@ -1322,4 +1322,7 @@ function GainUI:Destroy()
     for i = #self.Windows, 1, -1 do self.Windows[i]:Destroy() end
 end
 
+-- Matcha's loadstring drops return values, so the library is also left in
+-- _G: `loadstring(...)() or _G.GainUI` works everywhere.
+_G.GainUI = GainUI
 return GainUI

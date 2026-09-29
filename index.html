@@ -191,7 +191,7 @@ td:first-child code { white-space: nowrap; }
 
 <script>
 const RAW = "https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua";
-const LOAD = `local GainUI = loadstring(game:HttpGet("${RAW}"))()`;
+const LOAD = `local GainUI = loadstring(game:HttpGet("${RAW}"))() or _G.GainUI`;
 const UPDATED = "Updated for GainUI 1.0.0";
 
 // Icons (lucide-style strokes)
@@ -245,6 +245,7 @@ const PAGES = [
 <h2 id="install">Install</h2>
 <p>Load the library at the top of your script. There's nothing to download: it always runs the latest version from GitHub.</p>
 ${code(LOAD)}
+${hint(`Why ${c("or _G.GainUI")}? Matcha's ${c("loadstring")} drops return values, so GainUI also puts itself in ${c("_G.GainUI")}. This line works in Matcha and in executors that do return.`)}
 <h2 id="first-window">Your first window</h2>
 ${code(`${LOAD}
 

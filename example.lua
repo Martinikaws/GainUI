@@ -1,5 +1,5 @@
 -- GainUI example: every element once. Run it in Matcha.
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))()
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
 
 local Window = GainUI:CreateWindow({
     Title = "GainUI",

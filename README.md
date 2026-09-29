@@ -5,7 +5,7 @@ A drawn GUI library for [Matcha](https://matcha-latte.gitbook.io/matcha). Window
 **Docs:** https://martinikaws.github.io/GainUI/
 
 ```lua
-local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))()
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
 
 local Window = GainUI:CreateWindow({Title = "My Script", ConfigName = "myscript"})
 local Main = Window:Tab("Main")
