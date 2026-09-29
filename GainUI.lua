@@ -336,6 +336,15 @@ function GainUI:CreateWindow(opts)
         place(o, c, "Position", math.floor(x + 0.5), math.floor(y + size * 0.3 + 0.5))
         put(o, c, "Color", color) put(o, c, "ZIndex", z or 5) put(o, c, "Transparency", Fade) put(o, c, "Visible", true)
     end
+    -- Text whose letters are centred on the line `mid`, for text in a row or
+    -- a box. (Measured in Matcha: left-aligned capitals start about a quarter
+    -- of the size below the position and are ~0.68 of the size tall; centred
+    -- text is centred on its position both ways.)
+    local function mtext(s, x, mid, color, size, z, bold, center)
+        size = size or 13
+        if center then text(s, x, mid - size * 0.3, color, size, z, bold, true)
+        else text(s, x, mid - size * 0.89, color, size, z, bold) end
+    end
     local function line(x1, y1, x2, y2, color, z, thick)
         local o, c = take("ln")
         place(o, c, "From", x1, y1) place(o, c, "To", x2, y2)
@@ -596,7 +605,7 @@ function GainUI:CreateWindow(opts)
         if el.Hidden then return 0 end
         if k == "Section" then return 30 end
         if k == "Label" then return math.max(1, #wrapText(el.Text, w - 16, 13)) * 17 + 8 end
-        if k == "Paragraph" then return 30 + #wrapText(el.Content, w - 24, 13) * 17 + 8 end
+        if k == "Paragraph" then return 42 + #wrapText(el.Content, w - 24, 13) * 17 + 8 end
         if k == "Slider" then return 54 end
         if k == "Dropdown" or k == "Textbox" then return 62 end
         if k == "Image" then return (el.Height or 120) + 8 end
@@ -610,7 +619,7 @@ function GainUI:CreateWindow(opts)
 
     local DRAW = {}
     function DRAW.Section(el, x, y, w)
-        text(el.Name:upper(), x + 2, y + 10, C.accent, 12, 5, true)
+        mtext(el.Name:upper(), x + 2, y + 17, C.accent, 12, 5, true)
         line(x + textWidth(el.Name:upper(), 12, true) + 12, y + 17, x + w, y + 17, C.line, 2, 1)
     end
     function DRAW.Divider(el, x, y, w) line(x, y + 6, x + w, y + 6, C.line, 2, 1) end
@@ -621,22 +630,22 @@ function GainUI:CreateWindow(opts)
     end
     function DRAW.Paragraph(el, x, y, w, h)
         card(x, y, w, h - 8)
-        text(el.Name, x + 12, y + 9, C.text, 14, 5, true)
+        mtext(el.Name, x + 12, y + 18, C.text, 14, 5, true)
         for i, l in ipairs(wrapText(el.Content, w - 24, 13)) do
-            text(l, x + 12, y + 30 + (i - 1) * 17, C.dim, 13, 5)
+            text(l, x + 12, y + 32 + (i - 1) * 17, C.dim, 13, 5)
         end
     end
     function DRAW.Button(el, x, y, w)
         local hot = over(x, y, w, 34) and not inside(M.x, M.y, popupRect)
         card(x, y, w, 34, hot)
         if hot then border(x, y, w, 34, C.accent, 4, 6) end
-        text(el.Name, x + w / 2, y + 10, C.text, 13, 5, true, true)
+        mtext(el.Name, x + w / 2, y + 17, C.text, 13, 5, true, true)
         if clicked(x, y, w, 34) then task.spawn(callback, el) end
     end
     function DRAW.Toggle(el, x, y, w)
         local hot = over(x, y, w, 34) and not inside(M.x, M.y, popupRect)
         card(x, y, w, 34, hot)
-        text(fitText(el.Name, w - 80, 13), x + 12, y + 10, C.text, 13, 5)
+        mtext(fitText(el.Name, w - 80, 13), x + 12, y + 17, C.text, 13, 5)
         local sx, sy, sw, sh = x + w - 50, y + 8, 38, 18
         rect(sx, sy, sw, sh, el.Value and C.accent or C.line, 4, 9)
         circle(el.Value and (sx + sw - 9) or (sx + 9), sy + 9, 6, el.Value and C.onAccent or C.dim, 6, true)
@@ -644,9 +653,9 @@ function GainUI:CreateWindow(opts)
     end
     function DRAW.Slider(el, x, y, w)
         card(x, y, w, 46)
-        text(fitText(el.Name, w - 110, 13), x + 12, y + 8, C.text, 13, 5)
+        mtext(fitText(el.Name, w - 110, 13), x + 12, y + 15, C.text, 13, 5)
         local shown = tostring(el.Value) .. (el.Suffix or "")
-        text(shown, x + w - 12 - textWidth(shown, 13), y + 8, C.dim, 13, 5)
+        mtext(shown, x + w - 12 - textWidth(shown, 13), y + 15, C.dim, 13, 5)
         local tx, ty, tw = x + 12, y + 31, w - 24
         local frac = (el.Value - el.Min) / math.max(1e-9, el.Max - el.Min)
         rect(tx, ty, tw, 5, C.line, 4, 3)
@@ -662,17 +671,17 @@ function GainUI:CreateWindow(opts)
     end
     function DRAW.Textbox(el, x, y, w)
         card(x, y, w, 54)
-        text(fitText(el.Name, w - 24, 13), x + 12, y + 7, C.text, 13, 5)
+        mtext(fitText(el.Name, w - 24, 13), x + 12, y + 14, C.text, 13, 5)
         local bx, by, bw, bh = x + 10, y + 25, w - 20, 22
         local focused = focus == el.id
         rect(bx, by, bw, bh, C.panel, 4, 5)
         border(bx, by, bw, bh, focused and C.accent or C.line, 4, 5)
         local value = focused and focusValue or tostring(el.Value or "")
         if value == "" and not focused then
-            text(el.Placeholder or "", bx + 8, by + 4, C.faint, 13, 5)
+            mtext(el.Placeholder or "", bx + 8, by + 11, C.faint, 13, 5)
         else
             local caret = focused and (tick() % 1 < 0.5) and "|" or ""
-            text(fitText(value, bw - 20, 13) .. caret, bx + 8, by + 4, C.text, 13, 5)
+            mtext(fitText(value, bw - 20, 13) .. caret, bx + 8, by + 11, C.text, 13, 5)
         end
         if clicked(bx, by, bw, bh) and not focused then
             blur()
@@ -690,13 +699,13 @@ function GainUI:CreateWindow(opts)
     function DRAW.Keybind(el, x, y, w)
         local hot = over(x, y, w, 34) and not inside(M.x, M.y, popupRect)
         card(x, y, w, 34, hot)
-        text(fitText(el.Name, w - 130, 13), x + 12, y + 10, C.text, 13, 5)
+        mtext(fitText(el.Name, w - 130, 13), x + 12, y + 17, C.text, 13, 5)
         local label = binding == el.id and "..." or keyLabel(el.Value)
         local cw = math.max(44, textWidth(label, 12) + 18)
         local cx = x + w - 12 - cw
         rect(cx, y + 7, cw, 20, binding == el.id and C.accentDim or C.panel, 4, 5)
         border(cx, y + 7, cw, 20, binding == el.id and C.accent or C.line, 4, 5)
-        text(label, cx + cw / 2, y + 10, C.text, 12, 5, false, true)
+        mtext(label, cx + cw / 2, y + 17, C.text, 12, 5, false, true)
         if clicked(x, y, w, 34) then blur(); binding = el.id; bindHeld = {}; for vk in pairs(keyNow) do bindHeld[vk] = keyNow[vk] end end
     end
 
@@ -728,7 +737,7 @@ function GainUI:CreateWindow(opts)
                 local picked = el.Multi and table.find(el.Value, option) or (not el.Multi and el.Value == option)
                 if over(bx + 4, ry, bw - 8, rowH) then rect(bx + 4, ry, bw - 8, rowH, C.cardHover, 22, 5) end
                 if picked then rect(bx + 4, ry + 6, 2, rowH - 12, C.accent, 23, 1) end
-                text(fitText(tostring(option), bw - 30, 13), bx + 14, ry + 6, picked and C.text or C.dim, 13, 24,
+                mtext(fitText(tostring(option), bw - 30, 13), bx + 14, ry + 13, picked and C.text or C.dim, 13, 24,
                     picked and true or false)
                 if clicked(bx + 4, ry, bw - 8, rowH, true) then
                     if el.Multi then
@@ -746,13 +755,13 @@ function GainUI:CreateWindow(opts)
                 local barH = math.max(16, (ph - 8) * rows / count)
                 rect(bx + bw - 6, py + 4 + (ph - 8 - barH) * s.first / maxFirst, 3, barH, C.faint, 23, 2)
             end
-            if count == 0 then text("No options", bx + 12, py + 8, C.faint, 13, 24) end
+            if count == 0 then mtext("No options", bx + 12, py + 17, C.faint, 13, 24) end
             return {x = bx, y = py, w = bw, h = ph}
         end
     end
     function DRAW.Dropdown(el, x, y, w, _, bottom)
         card(x, y, w, 54)
-        text(fitText(el.Name, w - 24, 13), x + 12, y + 7, C.text, 13, 5)
+        mtext(fitText(el.Name, w - 24, 13), x + 12, y + 14, C.text, 13, 5)
         local bx, by, bw, bh = x + 10, y + 25, w - 20, 22
         local isOpen = popup == el.id
         local hot = over(bx, by, bw, bh) and not inside(M.x, M.y, popupRect)
@@ -761,7 +770,7 @@ function GainUI:CreateWindow(opts)
         local shown
         if el.Multi then shown = #el.Value == 0 and "None" or table.concat(el.Value, ", ")
         else shown = el.Value ~= nil and tostring(el.Value) or "None" end
-        text(fitText(shown, bw - 36, 13), bx + 8, by + 4, C.text, 13, 5)
+        mtext(fitText(shown, bw - 36, 13), bx + 8, by + 11, C.text, 13, 5)
         -- a small arrow
         local ax, ay = bx + bw - 16, by + 11
         if isOpen then line(ax - 4, ay + 2, ax, ay - 2, C.dim, 6, 1); line(ax, ay - 2, ax + 4, ay + 2, C.dim, 6, 1)
@@ -790,7 +799,7 @@ function GainUI:CreateWindow(opts)
             local segs = 24
             for i, bar in ipairs(bars) do
                 local bx, by, bw = px + 26, py + 12 + (i - 1) * 24, pw - 38
-                text(bar[1], px + 10, by - 1, C.dim, 12, 24)
+                mtext(bar[1], px + 10, by + 6, C.dim, 12, 24)
                 for sgi = 0, segs - 1 do
                     rect(bx + bw * sgi / segs, by, math.ceil(bw / segs) + 1, 12, bar[2]((sgi + 0.5) / segs), 22, 0)
                 end
@@ -822,7 +831,7 @@ function GainUI:CreateWindow(opts)
             rect(hx, hy, hw, 26, C.card, 22, 5)
             border(hx, hy, hw, 26, focused and C.accent or C.line, 23, 5)
             local hexText = focused and focusValue or ("#" .. colorToHex(el.Value))
-            text(hexText .. (focused and (tick() % 1 < 0.5) and "|" or ""), hx + 8, hy + 6, C.text, 13, 24)
+            mtext(hexText .. (focused and (tick() % 1 < 0.5) and "|" or ""), hx + 8, hy + 13, C.text, 13, 24)
             rect(hx + hw - 30, hy + 5, 22, 16, el.Value, 24, 3)
             if clicked(hx, hy, hw, 26, true) and not focused then
                 blur()
@@ -838,7 +847,7 @@ function GainUI:CreateWindow(opts)
     function DRAW.Colorpicker(el, x, y, w, _, bottom)
         local hot = over(x, y, w, 34) and not inside(M.x, M.y, popupRect)
         card(x, y, w, 34, hot)
-        text(fitText(el.Name, w - 90, 13), x + 12, y + 10, C.text, 13, 5)
+        mtext(fitText(el.Name, w - 90, 13), x + 12, y + 17, C.text, 13, 5)
         rect(x + w - 50, y + 8, 38, 18, el.Value, 5, 5)
         border(x + w - 50, y + 8, 38, 18, popup == el.id and C.accent or C.line, 6, 5)
         if clicked(x, y, w, 34) then
@@ -855,7 +864,7 @@ function GainUI:CreateWindow(opts)
             picture(el.id, el.data, x + (w - iw) / 2, y, iw, h, 5)
         else
             card(x, y, w, h)
-            text(el.failed and "Image failed to load" or "Loading image...", x + w / 2, y + h / 2 - 7, C.faint, 13, 5, false, true)
+            mtext(el.failed and "Image failed to load" or "Loading image...", x + w / 2, y + h / 2, C.faint, 13, 5, false, true)
         end
     end
 
@@ -1129,7 +1138,7 @@ function GainUI:CreateWindow(opts)
             if hot and not sel then
                 rect(x + 8, ty, SIDEBAR - 16, 30, C.panel, 2, 6)
             end
-            text(fitText(tab.Name, SIDEBAR - 40, 13), x + 22, ty + 8, sel and C.text or C.dim, 13, 5, sel)
+            mtext(fitText(tab.Name, SIDEBAR - 40, 13), x + 22, ty + 15, sel and C.text or C.dim, 13, 5, sel)
             if clicked(x + 8, ty, SIDEBAR - 16, 30) then Window:SelectTab(tab) end
             ty = ty + 34
         end
