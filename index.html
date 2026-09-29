@@ -1,0 +1,786 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GainUI</title>
+<meta name="description" content="GainUI - a drawn GUI library for Matcha. Windows, tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23568cff'/%3E%3Ctext x='16' y='22' font-family='Arial' font-weight='700' font-size='17' fill='white' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #1b1b1d; --bg-2: #161618; --panel: #222225; --panel-2: #2a2a2e; --line: #333338; --line-2: #2a2a2f;
+  --text: #ececef; --dim: #a1a1aa; --faint: #71717a; --accent: #6b9bff; --accent-2: #568cff; --accent-bg: rgba(86,140,255,.12);
+  --code-bg: #232326; --kw: #c792ea; --str: #a5d6a7; --num: #f7a76c; --com: #6b7280; --fn: #82aaff; --warn-bg: rgba(234,179,8,.1); --warn: #eab308;
+  --tip-bg: rgba(86,140,255,.1); --shadow: 0 10px 40px rgba(0,0,0,.45);
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #ffffff; --bg-2: #f7f7f8; --panel: #f4f4f5; --panel-2: #ececef; --line: #e4e4e7; --line-2: #ececef;
+    --text: #18181b; --dim: #52525b; --faint: #8b8b93; --accent: #3d74f0; --accent-2: #3d74f0; --accent-bg: rgba(61,116,240,.09);
+    --code-bg: #f6f6f7; --kw: #8e44ad; --str: #2e7d32; --num: #c2410c; --com: #9ca3af; --fn: #1d4ed8; --warn-bg: #fef9e7; --warn: #a16207;
+    --tip-bg: rgba(61,116,240,.07); --shadow: 0 10px 40px rgba(0,0,0,.12);
+  }
+}
+:root[data-theme="light"] {
+  --bg: #ffffff; --bg-2: #f7f7f8; --panel: #f4f4f5; --panel-2: #ececef; --line: #e4e4e7; --line-2: #ececef;
+  --text: #18181b; --dim: #52525b; --faint: #8b8b93; --accent: #3d74f0; --accent-2: #3d74f0; --accent-bg: rgba(61,116,240,.09);
+  --code-bg: #f6f6f7; --kw: #8e44ad; --str: #2e7d32; --num: #c2410c; --com: #9ca3af; --fn: #1d4ed8; --warn-bg: #fef9e7; --warn: #a16207;
+  --tip-bg: rgba(61,116,240,.07); --shadow: 0 10px 40px rgba(0,0,0,.12);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg); color: var(--text); font: 15px/1.65 Inter, system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+
+/* Top bar */
+.top { position: sticky; top: 0; z-index: 30; height: 60px; display: flex; align-items: center; gap: 16px; padding: 0 20px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-2); }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); width: 236px; flex-shrink: 0; }
+.brand:hover { text-decoration: none; }
+.logo { width: 28px; height: 28px; border-radius: 8px; background: var(--accent-2); color: #fff; display: grid; place-items: center; font-size: 15px; font-weight: 700; }
+.search-btn { flex: 1; max-width: 420px; height: 36px; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--bg-2); color: var(--faint); font: inherit; font-size: 14px; cursor: pointer; }
+.search-btn:hover { border-color: var(--faint); }
+.search-btn kbd { margin-left: auto; }
+kbd { font: 500 11px Inter, sans-serif; color: var(--dim); background: var(--panel); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+.top-links { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+.icon-btn { width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center; color: var(--dim); background: none; border: none; cursor: pointer; }
+.icon-btn:hover { background: var(--panel); color: var(--text); }
+.menu-btn { display: none; }
+
+/* Layout */
+.layout { display: grid; grid-template-columns: 276px minmax(0, 1fr) 220px; max-width: 1440px; margin: 0 auto; }
+.side { position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; padding: 22px 16px 90px 20px; }
+.side h6 { margin: 20px 0 6px; padding: 0 8px; font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--text); }
+.side h6:first-child { margin-top: 0; }
+.side a { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; color: var(--dim); font-size: 14px; }
+.side a:hover { background: var(--panel); color: var(--text); text-decoration: none; }
+.side a.on { background: var(--accent-bg); color: var(--accent); font-weight: 500; }
+.side svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .85; }
+.side-foot { position: fixed; bottom: 16px; left: max(16px, calc((100vw - 1440px) / 2 + 16px)); width: 244px; }
+.side-foot a { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--bg);
+  color: var(--text); font-size: 13px; font-weight: 500; }
+.side-foot a:hover { border-color: var(--faint); text-decoration: none; }
+
+main { padding: 34px 48px 80px; min-width: 0; }
+.doc { max-width: 760px; }
+.crumbs { font-size: 12.5px; color: var(--accent); font-weight: 500; margin-bottom: 8px; display: flex; gap: 6px; align-items: center; }
+.crumbs span { color: var(--faint); }
+.title-row { display: flex; align-items: center; gap: 14px; margin: 0 0 8px; }
+.title-row svg { width: 30px; height: 30px; color: var(--dim); flex-shrink: 0; }
+h1 { font-size: 34px; line-height: 1.2; margin: 0; letter-spacing: -.02em; }
+.lead { font-size: 17px; color: var(--dim); margin: 6px 0 26px; }
+h2 { font-size: 23px; margin: 40px 0 10px; letter-spacing: -.01em; scroll-margin-top: 80px; }
+h3 { font-size: 17px; margin: 28px 0 8px; scroll-margin-top: 80px; }
+h2 a.anchor, h3 a.anchor { opacity: 0; margin-left: 6px; color: var(--faint); }
+h2:hover a.anchor, h3:hover a.anchor { opacity: 1; }
+p { margin: 10px 0; }
+ul { padding-left: 22px; margin: 10px 0; }
+li { margin: 4px 0; }
+:not(pre) > code { font-size: 13px; background: var(--panel); border: 1px solid var(--line-2); border-radius: 6px; padding: 1px 6px; }
+.code { position: relative; margin: 16px 0; border: 1px solid var(--line-2); border-radius: 12px; background: var(--code-bg); overflow: hidden; }
+.code-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 8px 6px 14px; border-bottom: 1px solid var(--line-2); font-size: 12px; color: var(--faint); }
+.code pre { margin: 0; padding: 14px 16px; overflow-x: auto; font-size: 13px; line-height: 1.6; }
+.copy { font: 500 12px Inter, sans-serif; color: var(--dim); background: none; border: 1px solid transparent; border-radius: 6px; padding: 3px 8px; cursor: pointer; }
+.copy:hover { background: var(--panel); border-color: var(--line); color: var(--text); }
+.sig { font-family: "JetBrains Mono", monospace; font-size: 13px; background: var(--code-bg); border: 1px solid var(--line-2); border-radius: 10px; padding: 10px 14px; margin: 12px 0; overflow-x: auto; white-space: nowrap; }
+.tok-kw { color: var(--kw); } .tok-str { color: var(--str); } .tok-num { color: var(--num); } .tok-com { color: var(--com); font-style: italic; } .tok-fn { color: var(--fn); }
+table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 14px 0; font-size: 14px; border: 1px solid var(--line-2); border-radius: 12px; overflow: hidden; }
+th, td { text-align: left; padding: 9px 14px; border-bottom: 1px solid var(--line-2); vertical-align: top; }
+th { background: var(--bg-2); font-size: 12.5px; color: var(--dim); font-weight: 600; }
+tr:last-child td { border-bottom: none; }
+td:first-child code { white-space: nowrap; }
+.table-wrap { overflow-x: auto; }
+.hint { display: flex; gap: 12px; padding: 12px 16px; border-radius: 12px; margin: 16px 0; background: var(--tip-bg); border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent); font-size: 14px; }
+.hint.warn { background: var(--warn-bg); border-color: color-mix(in srgb, var(--warn) 30%, transparent); }
+.hint svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; color: var(--accent); }
+.hint.warn svg { color: var(--warn); }
+.hint p { margin: 0; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin: 18px 0; }
+.card { display: block; padding: 16px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); }
+.card:hover { border-color: var(--accent); text-decoration: none; }
+.card b { display: block; margin-bottom: 4px; }
+.card span { color: var(--dim); font-size: 13.5px; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 56px; }
+.pager a { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border: 1px solid var(--line); border-radius: 12px; color: var(--text); }
+.pager a:hover { border-color: var(--accent); text-decoration: none; }
+.pager a.next { justify-content: flex-end; text-align: right; grid-column: 2; }
+.pager small { display: block; color: var(--faint); font-size: 12px; }
+.pager b { font-weight: 600; }
+.updated { color: var(--faint); font-size: 13px; margin-top: 18px; }
+.toc { position: sticky; top: 60px; height: calc(100vh - 60px); overflow-y: auto; padding: 36px 20px 40px 8px; font-size: 13px; }
+.toc b { display: block; font-size: 12px; color: var(--text); margin-bottom: 8px; }
+.toc a { display: block; color: var(--faint); padding: 3px 0 3px 12px; border-left: 1px solid var(--line); }
+.toc a.sub { padding-left: 24px; }
+.toc a:hover { color: var(--text); text-decoration: none; }
+.toc a.on { color: var(--accent); border-color: var(--accent); }
+
+/* Window preview on the home page */
+.preview { margin: 22px 0 8px; border-radius: 14px; border: 1px solid var(--line); background: #0f1015; padding: 18px; overflow-x: auto; }
+.gw { width: 560px; height: 300px; margin: 0 auto; display: flex; border-radius: 10px; border: 1px solid #2c2f3c; background: #0f1015; overflow: hidden; color: #e2e5ec; font-size: 12.5px; }
+.gw .gs { width: 140px; background: #13141b; border-right: 1px solid #2c2f3c; padding: 14px 8px; }
+.gw .gs .t { font-weight: 700; font-size: 14px; padding: 0 8px; }
+.gw .gs .st { color: #568cff; font-size: 11px; padding: 0 8px 14px; }
+.gw .gs .tab { padding: 6px 12px; border-radius: 6px; color: #8a90a0; margin-bottom: 3px; position: relative; }
+.gw .gs .tab.on { background: #1c1e27; color: #e2e5ec; font-weight: 600; }
+.gw .gs .tab.on::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 2px; background: #568cff; }
+.gw .gp { flex: 1; padding: 14px 16px; }
+.gw .gp h5 { margin: 0 0 12px; font-size: 15px; }
+.gw .row { height: 32px; background: #1c1e27; border-radius: 6px; margin-bottom: 7px; display: flex; align-items: center; padding: 0 11px; justify-content: space-between; }
+.gw .sw { width: 34px; height: 17px; border-radius: 9px; background: #568cff; position: relative; }
+.gw .sw::after { content: ""; position: absolute; right: 3px; top: 3px; width: 11px; height: 11px; border-radius: 50%; background: #fff; }
+.gw .sw.off { background: #2c2f3c; } .gw .sw.off::after { right: auto; left: 3px; background: #8a90a0; }
+.gw .sl { height: 44px; flex-direction: column; align-items: stretch; justify-content: center; gap: 7px; }
+.gw .sl .l { display: flex; justify-content: space-between; } .gw .sl .l span { color: #8a90a0; }
+.gw .tr { height: 5px; border-radius: 3px; background: #2c2f3c; position: relative; }
+.gw .tr i { position: absolute; left: 0; top: 0; bottom: 0; width: 42%; background: #568cff; border-radius: 3px; }
+.gw .sec { color: #568cff; font-weight: 700; font-size: 11px; letter-spacing: .04em; margin: 4px 0 8px; }
+
+/* Search */
+.sd { position: fixed; inset: 0; z-index: 50; background: rgba(0,0,0,.5); display: none; align-items: flex-start; justify-content: center; padding: 12vh 16px 0; }
+.sd.open { display: flex; }
+.sbox { width: 100%; max-width: 580px; background: var(--bg); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; }
+.sbox input { width: 100%; height: 52px; border: none; border-bottom: 1px solid var(--line-2); background: none; color: var(--text); font: inherit; font-size: 16px; padding: 0 18px; outline: none; }
+.sres { max-height: 50vh; overflow-y: auto; padding: 6px; }
+.sres a { display: block; padding: 10px 12px; border-radius: 8px; color: var(--text); }
+.sres a small { display: block; color: var(--faint); font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sres a.sel, .sres a:hover { background: var(--accent-bg); text-decoration: none; }
+.sres .none { padding: 18px; color: var(--faint); text-align: center; }
+
+@media (max-width: 1180px) { .layout { grid-template-columns: 260px minmax(0, 1fr); } .toc { display: none; } }
+@media (max-width: 820px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  .menu-btn { display: grid; }
+  .brand { width: auto; }
+  .search-btn span.label { display: none; }
+  .search-btn kbd { display: none; }
+  .search-btn { max-width: 44px; padding: 0; justify-content: center; }
+  .side { position: fixed; z-index: 40; top: 60px; left: 0; width: 290px; background: var(--bg); border-right: 1px solid var(--line); transform: translateX(-100%); transition: transform .2s; }
+  .side.open { transform: none; }
+  .side-foot { display: none; }
+  main { padding: 26px 16px 70px; }
+  h1 { font-size: 28px; }
+  .pager { grid-template-columns: 1fr; } .pager a.next { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="icon-btn menu-btn" id="menuBtn" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <a class="brand" href="#/"><span class="logo">G</span>GainUI</a>
+  <button class="search-btn" id="searchBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="label">Search...</span><kbd>Ctrl K</kbd></button>
+  <div class="top-links">
+    <button class="icon-btn" id="themeBtn" aria-label="Switch theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+    <a class="icon-btn" href="https://github.com/Martinikaws/GainUI" aria-label="GitHub" target="_blank" rel="noopener"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="side" id="side"></nav>
+  <main><article class="doc" id="doc"></article></main>
+  <aside class="toc" id="toc"></aside>
+</div>
+<div class="side-foot"><a href="https://github.com/Martinikaws/GainUI" target="_blank" rel="noopener"><span class="logo" style="width:22px;height:22px;font-size:12px;border-radius:6px">G</span>GainUI on GitHub</a></div>
+
+<div class="sd" id="sd"><div class="sbox"><input id="sq" placeholder="Search the docs..." autocomplete="off"><div class="sres" id="sres"></div></div></div>
+
+<script>
+const RAW = "https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua";
+const LOAD = `local GainUI = loadstring(game:HttpGet("${RAW}"))()`;
+const UPDATED = "Updated for GainUI 1.0.0";
+
+// Icons (lucide-style strokes)
+const I = {
+  book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/>',
+  play: '<polygon points="6 3 20 12 6 21 6 3"/>',
+  window: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v5"/>',
+  bell: '<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>',
+  save: '<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/>',
+  layers: '<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',
+  click: '<rect x="3" y="8" width="18" height="8" rx="4"/>',
+  toggle: '<rect x="2" y="6" width="20" height="12" rx="6"/><circle cx="16" cy="12" r="3"/>',
+  slider: '<path d="M4 12h16"/><circle cx="10" cy="12" r="3"/>',
+  list: '<path d="m6 9 6 6 6-6"/><rect x="3" y="3" width="18" height="18" rx="2"/>',
+  type: '<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+  key: '<rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/>',
+  palette: '<circle cx="13.5" cy="6.5" r="1"/><circle cx="17.5" cy="10.5" r="1"/><circle cx="8.5" cy="7.5" r="1"/><circle cx="6.5" cy="12.5" r="1"/><path d="M12 2a10 10 0 0 0 0 20c1 0 1.5-.8 1.5-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1a1.6 1.6 0 0 1 1.6-1.6H16a6 6 0 0 0 6-6C22 6 17.5 2 12 2z"/>',
+  text: '<path d="M17 6.1H3M21 12.1H3M15.1 18H3"/>',
+  image: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>',
+  box: '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/>',
+  wrench: '<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>',
+  swap: '<path d="M16 3h5v5M4 20 21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/>',
+  info: '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4M12 17h.01"/>',
+  code: '<path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/>',
+};
+const svg = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${I[n]}</svg>`;
+
+// Content helpers
+const code = (src, lang = "lua") => `<div class="code"><div class="code-head"><span>${lang}</span><button class="copy">Copy</button></div><pre><code data-lang="${lang}">${esc(src.trim())}</code></pre></div>`;
+const sig = s => `<div class="sig">${esc(s)}</div>`;
+const hint = (s, kind) => `<div class="hint ${kind || ""}">${svg(kind === "warn" ? "alert" : "info")}<div>${s}</div></div>`;
+const table = (head, rows) => `<div class="table-wrap"><table><thead><tr>${head.map(h => `<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+const opts = rows => table(["Option", "Type", "Default", "Description"], rows);
+function esc(s) { return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); }
+const c = s => `<code>${esc(s)}</code>`;
+
+const ELEMENT_RETURNS = `<p>Returns the element. Keep it to change it later: ${c(":Set(value)")}, ${c(":Get()")}, ${c(".Value")}; see <a href="#/elements/methods">Element methods</a>.</p>`;
+
+const PAGES = [
+  { group: "Introduction", id: "", title: "Getting Started", icon: "book", lead: "A drawn GUI library for Matcha. Build a Gain-style window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.",
+    body: () => `
+<div class="preview"><div class="gw">
+  <div class="gs"><div class="t">My Script</div><div class="st">v1.0</div><div class="tab on">Main</div><div class="tab">Visuals</div><div class="tab">Settings</div></div>
+  <div class="gp"><h5>Main</h5><div class="sec">GENERAL</div>
+    <div class="row">Enabled<span class="sw"></span></div>
+    <div class="row">Show names<span class="sw off"></span></div>
+    <div class="row sl"><div class="l">Walk speed<span>42 studs</span></div><div class="tr"><i></i></div></div>
+  </div>
+</div></div>
+<h2 id="install">Install</h2>
+<p>Load the library at the top of your script. There's nothing to download: it always runs the latest version from GitHub.</p>
+${code(LOAD)}
+<h2 id="first-window">Your first window</h2>
+${code(`${LOAD}
+
+local Window = GainUI:CreateWindow({
+    Title = "My Script",
+    Subtitle = "v1.0",
+    ConfigName = "myscript", -- remembers every flagged value between runs
+})
+
+local Main = Window:Tab("Main")
+Main:Section("General")
+
+Main:Toggle({
+    Name = "Enabled",
+    Default = false,
+    Flag = "Enabled",
+    Callback = function(on)
+        print("Enabled:", on)
+    end,
+})
+
+Main:Slider({Name = "Walk speed", Min = 16, Max = 100, Default = 16, Suffix = " studs", Flag = "Speed",
+    Callback = function(v) print(v) end})
+
+Main:Button({Name = "Hello", Callback = function()
+    Window:Notify({Title = "Hello!", Content = "It works."})
+end})`)}
+<p>Press <kbd>Right Shift</kbd> to show or hide the window. Drag it by the title. Every window also gets a <b>Settings</b> tab, where users can change the show/hide key and the accent color and unload the script.</p>
+<h2 id="next">Next steps</h2>
+<div class="cards">
+  <a class="card" href="#/window/create"><b>Window</b><span>Title, size, accent, keys and saving.</span></a>
+  <a class="card" href="#/elements/toggle"><b>Elements</b><span>Every control you can put in a tab.</span></a>
+  <a class="card" href="#/guides/matcha"><b>Matcha notes</b><span>What the library does for you, and its limits.</span></a>
+  <a class="card" href="#/start/example"><b>Full example</b><span>Every element in one script.</span></a>
+</div>` },
+
+  { group: "Introduction", id: "start/example", title: "Example", icon: "play", lead: "One script that uses every element. Paste it into Matcha to see them all.",
+    body: () => code(`${LOAD}
+
+local Window = GainUI:CreateWindow({Title = "GainUI", Subtitle = "Example", ConfigName = "example"})
+
+local Main = Window:Tab("Main")
+Main:Section("Basics")
+Main:Label("Everything here is drawn with Matcha's Drawing library.")
+Main:Toggle({Name = "Enabled", Default = false, Flag = "Enabled", Callback = function(on) print("Enabled:", on) end})
+Main:Slider({Name = "Walk speed", Min = 16, Max = 100, Default = 16, Suffix = " studs", Flag = "Speed",
+    Callback = function(v) print("Speed:", v) end})
+Main:Button({Name = "Say hi", Callback = function()
+    Window:Notify({Title = "Hi!", Content = "Buttons run their callback when clicked.", Duration = 3})
+end})
+
+Main:Section("Choices")
+Main:Dropdown({Name = "Mode", Options = {"Legit", "Balanced", "Chaos"}, Default = "Balanced", Flag = "Mode",
+    Callback = function(opt) print("Mode:", opt) end})
+Main:Dropdown({Name = "Parts", Options = {"Head", "Torso", "Arms", "Legs"}, Multi = true, Default = {"Head"},
+    Flag = "Parts", Callback = function(list) print(table.concat(list, ", ")) end})
+Main:Textbox({Name = "Player name", Placeholder = "Type and press Enter", Flag = "Target",
+    Callback = function(text) print("Target:", text) end})
+
+local Extra = Window:Tab("Extra")
+Extra:Keybind({Name = "Say something", Default = "G", Flag = "SayKey", Callback = function()
+    Window:Notify({Title = "Keybind", Content = "You pressed the key."})
+end})
+Extra:Keybind({Name = "Hold to show", Default = "H", Mode = "Hold", Callback = function(held) print(held) end})
+Extra:Colorpicker({Name = "Box color", Default = Color3.fromRGB(255, 80, 80), Flag = "BoxColor",
+    Callback = function(c) print(c) end})
+Extra:Paragraph({Title = "About", Content = "Long tabs scroll: drag the page or its bar, or use Page Up / Page Down."})
+
+print("Speed is", GainUI.Flags.Speed.Value)`) + `<p>The same file is in the repository as <a href="https://github.com/Martinikaws/GainUI/blob/main/example.lua" target="_blank" rel="noopener">example.lua</a>.</p>` },
+
+  { group: "Window", id: "window/create", title: "CreateWindow", icon: "window", lead: "Makes a window and returns it. A script can make more than one.",
+    body: () => sig("GainUI:CreateWindow(options: table) -> Window") + code(`local Window = GainUI:CreateWindow({
+    Title = "My Script",
+    Subtitle = "v1.0",
+    ConfigName = "myscript",
+    ToggleKey = "RightShift",
+    Accent = "568cff",
+    Size = {620, 460},
+})`) + `<h2 id="options">Options</h2>` + opts([
+      [c("Title"), "string", c('"GainUI"'), "Shown at the top of the sidebar."],
+      [c("Subtitle"), "string", "none", "A smaller line under the title, in the accent color."],
+      [c("ConfigName"), "string", "none", `Saves flagged elements to ${c("Folder/ConfigName.json")}. Without it nothing is saved. See <a href="#/window/saving">Saving</a>.`],
+      [c("Folder"), "string", c('"GainUI"'), "The workspace folder settings are saved in."],
+      [c("ToggleKey"), "key", c('"RightShift"'), `The key that shows and hides the window. See <a href="#/guides/keys">Key names</a>.`],
+      [c("Accent"), "hex / Color3", c('"568cff"'), "The highlight color. Users can change it in Settings."],
+      [c("Size"), "{w, h}", c("{620, 460}"), "Window size in pixels (at least 460 × 320). It shrinks to fit small screens."],
+      [c("Open"), "boolean", c("true"), `Start shown. With ${c("false")}, the window waits for the toggle key.`],
+      [c("Settings"), "boolean", c("true"), `Add the built-in Settings tab (show/hide key, accent, mouse offset, reset, unload).`],
+      [c("MouseOffset"), "number", c("0"), "Pixels added to the mouse's y. Users can adjust it in Settings if clicks land off."],
+      [c("Theme"), "table", "none", `Override colors: ${c("bg")}, ${c("side")}, ${c("panel")}, ${c("card")}, ${c("cardHover")}, ${c("line")}, ${c("text")}, ${c("dim")}, ${c("faint")} (hex strings or Color3).`],
+      [c("OnUnload"), "function", "none", "Runs when the window is destroyed (from code or Settings → Unload). Clean up your connections here."],
+    ]) + hint(`The window starts centered. Users can drag it by the title area, and it remembers where it was until the script ends.`) },
+
+  { group: "Window", id: "window/methods", title: "Window methods", icon: "layers", lead: "Everything a window can do after it's made.",
+    body: () => table(["Method", "Description"], [
+      [c("Window:Tab(name) -> Tab"), `Adds a tab to the sidebar. Aliases: ${c("CreateTab")}, ${c("AddTab")}.`],
+      [c("Window:SelectTab(tab | name)"), "Switches to a tab."],
+      [c("Window:Notify(options)"), `Shows a notification. See <a href="#/window/notify">Notifications</a>.`],
+      [c("Window:Toggle(open?)"), "Shows or hides the window. Without an argument, it flips."],
+      [c("Window:IsOpen() -> boolean"), "Whether the window is shown."],
+      [c("Window:SetAccent(color)"), "Changes the accent (hex string or Color3)."],
+      [c("Window:GetAccent() -> Color3"), "The current accent."],
+      [c("Window:SetToggleKey(key)"), "Changes the show/hide key."],
+      [c("Window:GetToggleKey() -> string"), `The show/hide key's name, like ${c('"RightShift"')}.`],
+      [c("Window:SetTitle(title, subtitle?)"), "Changes the title (and subtitle)."],
+      [c("Window:Save()"), "Saves flags right away (normally a second after the last change)."],
+      [c("Window:Destroy()"), `Removes the window and everything it drew, and gives input back to the game. Alias: ${c("Unload")}.`],
+      [c("Window:Dump() -> string"), "Every text on screen with its position. Handy for checking a layout from a script."],
+    ]) + `<h2 id="fields">Fields</h2>` + table(["Field", "Description"], [
+      [c("Window.Flags"), "This window's flagged elements, by flag."],
+      [c("Window.Tabs"), "The tabs, in order."],
+      [c("Window.SettingsTab"), "The built-in Settings tab. Add your own elements to it if you like."],
+    ]) + `<h2 id="library">Library functions</h2>` + table(["Function", "Description"], [
+      [c("GainUI:CreateWindow(options)"), `Makes a window. Alias: ${c("GainUI:Window")}.`],
+      [c("GainUI:Notify(options)"), "A notification on the newest window."],
+      [c("GainUI:Destroy()"), "Destroys every window."],
+      [c("GainUI.Flags"), "Every flagged element from every window."],
+      [c("GainUI.Hex(hex) -> Color3"), `${c('"ff5050"')} to a Color3.`],
+      [c("GainUI.KeyLabel(key) -> string"), `How a key is shown, like ${c('"Right Shift"')}.`],
+      [c("GainUI.Version"), "The library version."],
+    ]) },
+
+  { group: "Window", id: "window/notify", title: "Notifications", icon: "bell", lead: "Short messages that slide in at the bottom right, even while the window is hidden.",
+    body: () => sig("Window:Notify({Title, Content?, Duration?})") + code(`Window:Notify({
+    Title = "Saved",
+    Content = "Your settings were saved.",
+    Duration = 4, -- seconds
+})`) + opts([
+      [c("Title"), "string", c('"Notice"'), "The bold first line."],
+      [c("Content"), "string", "none", "More text. It wraps."],
+      [c("Duration"), "number", c("4"), "Seconds before it fades out. A thin bar shows the time left."],
+    ]) + `<p>Up to five show at once; the oldest goes first. ${c('Window:Notify("Text")')} works too, using the text as the title.</p>` },
+
+  { group: "Window", id: "window/saving", title: "Saving & Flags", icon: "save", lead: "Give an element a Flag and its value is saved and restored between runs.",
+    body: () => code(`local Window = GainUI:CreateWindow({Title = "My Script", ConfigName = "myscript"})
+local Main = Window:Tab("Main")
+
+Main:Toggle({Name = "Enabled", Flag = "Enabled", Callback = function(on) ... end})
+
+-- anywhere later:
+if GainUI.Flags.Enabled.Value then ... end`) + `
+<h2 id="how">How it works</h2>
+<ul>
+<li>With a ${c("ConfigName")}, flagged values are written to ${c("GainUI/<ConfigName>.json")} in Matcha's workspace, a second after the last change and when the window is destroyed.</li>
+<li>When the script runs again, each flagged element starts from its saved value instead of its ${c("Default")}.</li>
+<li>For a restored value, the element's ${c("Callback")} runs once on the first frame, so your script applies it just like a click would. Keybinds are the exception: they only fire on a key press.</li>
+<li>The show/hide key, the accent and the mouse offset from the Settings tab are saved too.</li>
+</ul>
+<h2 id="flags">Reading flags</h2>
+<p>${c("GainUI.Flags[flag]")} (and ${c("Window.Flags[flag]")}) is the element itself, so you can read ${c(".Value")} or call ${c(":Set()")} from anywhere.</p>
+${code(`GainUI.Flags.Speed:Set(50)          -- moves the slider and runs its callback
+print(GainUI.Flags.Mode.Value)      -- "Balanced"`)}
+${hint(`Flags must be unique across windows. Use a prefix like ${c('"MyScript_Speed"')} if several scripts share a session.`)}
+<h2 id="format">What gets saved</h2>
+${table(["Element", "Saved as"], [
+  ["Toggle", "true / false"], ["Slider", "number"], ["Dropdown", "string, or a list for Multi"], ["Textbox", "string"],
+  ["Keybind", `key name, like ${c('"G"')} or ${c('"None"')}`], ["Colorpicker", `${c('{"color": "ff5050"}')}`],
+])}` },
+
+  { group: "Elements", id: "elements/tab", title: "Tabs & Sections", icon: "layers", lead: "Tabs are the pages in the sidebar. Sections and dividers group the elements inside one.",
+    body: () => sig("Window:Tab(name: string) -> Tab") + code(`local Main = Window:Tab("Main")
+Main:Section("Movement")
+Main:Toggle({Name = "Fly"})
+Main:Divider()
+Main:Toggle({Name = "Noclip"})`) + `
+<p>Elements stack from top to bottom in the order you add them. When a tab gets longer than the window, it scrolls: drag the page, drag its scrollbar, or use <kbd>Page Up</kbd> / <kbd>Page Down</kbd> and the arrow keys while pointing at it.</p>
+<h2 id="section">Section</h2>
+${sig("Tab:Section(name: string)")}
+<p>A small accent heading with a line, to split a tab into groups.</p>
+<h2 id="divider">Divider</h2>
+${sig("Tab:Divider()")}
+<p>A thin line with no text.</p>
+${hint(`The Settings tab always stays last, even for tabs you add after the window is made.`)}` },
+
+  { group: "Elements", id: "elements/button", title: "Button", icon: "click", lead: "Runs a function when clicked.",
+    body: () => sig("Tab:Button({Name, Callback})") + code(`Main:Button({
+    Name = "Teleport to spawn",
+    Callback = function()
+        print("clicked")
+    end,
+})`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Callback"), "function()", "none", "Runs on click, in its own thread, so it can wait."],
+    ]) + ELEMENT_RETURNS },
+
+  { group: "Elements", id: "elements/toggle", title: "Toggle", icon: "toggle", lead: "An on/off switch.",
+    body: () => sig("Tab:Toggle({Name, Default?, Flag?, Callback?}) -> Element") + code(`local Esp = Main:Toggle({
+    Name = "Show names",
+    Default = false,
+    Flag = "ShowNames",
+    Callback = function(on)
+        print("Show names:", on)
+    end,
+})
+
+Esp:Set(true)       -- turn it on from code
+print(Esp.Value)    -- true`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Default"), "boolean", c("false"), "The starting state."],
+      [c("Flag"), "string", "none", `Saves the state. See <a href="#/window/saving">Saving</a>.`],
+      [c("Callback"), "function(on)", "none", "Runs with the new state when it changes."],
+    ]) + ELEMENT_RETURNS },
+
+  { group: "Elements", id: "elements/slider", title: "Slider", icon: "slider", lead: "Picks a number in a range by dragging.",
+    body: () => sig("Tab:Slider({Name, Min, Max, Default?, Increment?, Suffix?, Flag?, Callback?}) -> Element") + code(`Main:Slider({
+    Name = "Field of view",
+    Min = 70,
+    Max = 120,
+    Default = 90,
+    Increment = 1,
+    Suffix = "°",
+    Flag = "FOV",
+    Callback = function(v)
+        print("FOV:", v)
+    end,
+})`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Min"), "number", c("0"), `The lowest value. ${c("Range = {min, max}")} works too.`],
+      [c("Max"), "number", c("100"), "The highest value."],
+      [c("Default"), "number", c("Min"), "The starting value."],
+      [c("Increment"), "number", c("1"), `Step size. Use ${c("0.1")} or ${c("0.01")} for decimals.`],
+      [c("Suffix"), "string", "none", `Shown after the value, like ${c('" studs"')} or ${c('"%"')}.`],
+      [c("Flag"), "string", "none", "Saves the value."],
+      [c("Callback"), "function(value)", "none", "Runs with each new value while dragging."],
+    ]) + ELEMENT_RETURNS + hint(`${c(":Set(v)")} clamps to the range and rounds to the increment.`) },
+
+  { group: "Elements", id: "elements/dropdown", title: "Dropdown", icon: "list", lead: "Picks one option, or several, from a list.",
+    body: () => sig("Tab:Dropdown({Name, Options, Default?, Multi?, Flag?, Callback?}) -> Element") + code(`local Mode = Main:Dropdown({
+    Name = "Mode",
+    Options = {"Legit", "Balanced", "Chaos"},
+    Default = "Balanced",
+    Flag = "Mode",
+    Callback = function(option)
+        print("Mode:", option)
+    end,
+})
+
+-- pick several
+Main:Dropdown({
+    Name = "Parts",
+    Options = {"Head", "Torso", "Arms", "Legs"},
+    Multi = true,
+    Default = {"Head"},
+    Callback = function(list)
+        print(table.concat(list, ", "))
+    end,
+})
+
+-- new options later (for example a player list)
+Mode:Refresh({"A", "B", "C"})`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Options"), "{string}", c("{}"), "The choices."],
+      [c("Default"), "string / {string}", "none", "The starting choice (a list with Multi)."],
+      [c("Multi"), "boolean", c("false"), "Let users pick several. The value becomes a list."],
+      [c("Flag"), "string", "none", "Saves the choice."],
+      [c("Callback"), "function(value)", "none", "Runs with the choice (or the list) when it changes."],
+    ]) + `<h2 id="refresh">Refresh</h2>${sig("Dropdown:Refresh(options: {string}, keep: boolean?)")}<p>Replaces the options. Unless ${c("keep")} is true, the value resets to the first option (or an empty list with Multi).</p>` +
+      hint("The list opens under the box (above it near the bottom of the window) and shows seven rows at a time. Drag it or use the arrow keys to scroll. Clicking outside closes it.") },
+
+  { group: "Elements", id: "elements/textbox", title: "Textbox", icon: "type", lead: "Lets users type text.",
+    body: () => sig("Tab:Textbox({Name, Placeholder?, Default?, Numeric?, ClearOnFocusLost?, Flag?, Callback?}) -> Element") + code(`Main:Textbox({
+    Name = "Player name",
+    Placeholder = "Type and press Enter",
+    Flag = "Target",
+    Callback = function(text)
+        print("Target:", text)
+    end,
+})`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Placeholder"), "string", c('""'), "Grey text while it's empty."],
+      [c("Default"), "string", c('""'), "The starting text."],
+      [c("Numeric"), "boolean", c("false"), "Only keep a number (anything else becomes empty)."],
+      [c("ClearOnFocusLost"), "boolean", c("false"), "Empty the box after each entry, for command-style input."],
+      [c("Flag"), "string", "none", "Saves the text."],
+      [c("Callback"), "function(text)", "none", `Runs when typing ends: <kbd>Enter</kbd>, <kbd>Esc</kbd>, or clicking somewhere else.`],
+    ]) + ELEMENT_RETURNS + hint(`While a box is focused, typing goes to it and not to the game, and the show/hide key doesn't work. Letters, digits, space and common symbols are supported, with <kbd>Shift</kbd> for capitals; hold <kbd>Backspace</kbd> to delete quickly.`) },
+
+  { group: "Elements", id: "elements/keybind", title: "Keybind", icon: "key", lead: "A key users can rebind, which runs your function when pressed.",
+    body: () => sig("Tab:Keybind({Name, Default?, Mode?, Flag?, Callback?, Changed?}) -> Element") + code(`Main:Keybind({
+    Name = "Toggle fly",
+    Default = "F",
+    Mode = "Toggle",
+    Flag = "FlyKey",
+    Callback = function(state)
+        print("Fly:", state)
+    end,
+})`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Default"), "key", "none", `The starting key, like ${c('"F"')} or ${c('"LeftAlt"')}. See <a href="#/guides/keys">Key names</a>.`],
+      [c("Mode"), "string", c('"Press"'), `${c('"Press"')}: runs on each press. ${c('"Toggle"')}: flips a state on each press and passes it. ${c('"Hold"')}: passes ${c("true")} on press and ${c("false")} on release.`],
+      [c("Flag"), "string", "none", "Saves the key."],
+      [c("Callback"), "function(state?)", "none", "Runs on the key, as described in Mode."],
+      [c("Changed"), "function(keyName)", "none", `Runs when the user rebinds it, with the new key's name (or ${c('"None"')}).`],
+    ]) + `<h2 id="rebinding">Rebinding</h2><p>Click the key chip, then press a key. <kbd>Esc</kbd> cancels and <kbd>Backspace</kbd> clears it to None. Keybinds work while the window is hidden, but not while typing in a text box.</p>` + ELEMENT_RETURNS },
+
+  { group: "Elements", id: "elements/colorpicker", title: "Colorpicker", icon: "palette", lead: "Picks a color with hue, saturation and brightness bars, swatches, or a hex code.",
+    body: () => sig("Tab:Colorpicker({Name, Default?, Flag?, Callback?}) -> Element") + code(`Main:Colorpicker({
+    Name = "Box color",
+    Default = Color3.fromRGB(255, 80, 80), -- or "ff5050"
+    Flag = "BoxColor",
+    Callback = function(color)
+        print(color)
+    end,
+})`) + opts([
+      [c("Name"), "string", "none", "The label."],
+      [c("Default"), "Color3 / hex", "the accent", "The starting color."],
+      [c("Flag"), "string", "none", "Saves the color."],
+      [c("Callback"), "function(Color3)", "none", "Runs with each new color while picking."],
+    ]) + `<p>Clicking the swatch opens the picker: drag the <b>H</b>, <b>S</b> and <b>V</b> bars, click one of the ten swatches, or click the hex box and type a code like ${c("ff5050")} (then <kbd>Enter</kbd>). Alias: ${c("ColorPicker")}.</p>` + ELEMENT_RETURNS },
+
+  { group: "Elements", id: "elements/label", title: "Label & Paragraph", icon: "text", lead: "Text that explains things. Both wrap to the page's width.",
+    body: () => `<h2 id="label">Label</h2>${sig('Tab:Label(text | {Text, Color?}) -> Element')}${code(`local Status = Main:Label("Waiting...")
+Status:SetText("Ready!")
+
+Main:Label({Text = "Something went wrong", Color = "f05a5a"})`)}
+<h2 id="paragraph">Paragraph</h2>${sig("Tab:Paragraph({Title, Content}) -> Element")}${code(`local Info = Main:Paragraph({
+    Title = "How to use",
+    Content = "Turn on Enabled, then pick a mode. Your choices are saved.",
+})
+Info:Set("New content")               -- content only
+Info:Set("New title", "New content")  -- both`)}` },
+
+  { group: "Elements", id: "elements/image", title: "Image", icon: "image", lead: "Shows a picture, downloaded from a link or given as bytes.",
+    body: () => sig("Tab:Image({Url | Data, Height?, Width?}) -> Element") + code(`Main:Image({
+    Url = "https://example.com/banner.png",
+    Height = 120,
+})`) + opts([
+      [c("Url"), "string", "none", `Downloaded with ${c("game:HttpGet")} when the element is made. It shows "Loading..." until the download finishes.`],
+      [c("Data"), "string", "none", "The image's bytes, if you already have them (for example from readfile)."],
+      [c("Height"), "number", c("120"), "Height in pixels."],
+      [c("Width"), "number", "page width", "Width in pixels, centered."],
+    ]) + hint(`Use PNG or JPG. Matcha's ${c("writefile")} refuses the .png extension, so if you cache images in the workspace, save them with another extension like .dat.`, "warn") },
+
+  { group: "Elements", id: "elements/methods", title: "Element methods", icon: "box", lead: "Every element returns an object you can read and change later.",
+    body: () => table(["Method / field", "Description"], [
+      [c("el.Value"), "The current value (state, number, option, text, key code or Color3)."],
+      [c("el:Set(value, silent?)"), `Changes the value and runs the callback (unless ${c("silent")} is true). Aliases: ${c("SetValue")}.`],
+      [c("el:Get()"), `The value. Alias: ${c("GetValue")}.`],
+      [c("el:SetName(text)"), "Changes the label."],
+      [c("el:SetVisible(bool)"), "Hides or shows the element. The elements below move up."],
+      [c("el:SetText(text)"), "Labels only: changes the text."],
+      [c("el:Refresh(options, keep?)"), "Dropdowns only: new options."],
+      [c("el.Name / el.Flag / el.Kind"), `The label, the flag, and the kind (${c('"Toggle"')}, ${c('"Slider"')}, ...).`],
+    ]) + `<h2 id="aliases">Aliases</h2><p>If you're coming from another library, the familiar names work too:</p>` + table(["GainUI", "Also works"], [
+      [c("Tab:Toggle"), `${c("AddToggle")}, ${c("CreateToggle")}`],
+      [c("Tab:Textbox"), `${c("Input")}, ${c("AddInput")}, ${c("CreateInput")}, ${c("AddTextbox")}`],
+      [c("Tab:Colorpicker"), `${c("ColorPicker")}, ${c("AddColorPicker")}, ${c("CreateColorPicker")}`],
+      [c("(every element)"), `${c("Add<Kind>")} and ${c("Create<Kind>")}`],
+      [c("Slider options"), `${c("Range = {min, max}")}, ${c("Rounding")} for Increment, ${c("CurrentValue")} for Default`],
+      [c("Dropdown options"), `${c("Values")} for Options, ${c("MultipleOptions")} for Multi, ${c("CurrentOption")} for Default`],
+    ]) },
+
+  { group: "Guides", id: "guides/keys", title: "Key names", icon: "key", lead: "Keys can be given by name, key code, or Enum.KeyCode.",
+    body: () => code(`ToggleKey = "RightShift"       -- name
+ToggleKey = Enum.KeyCode.Insert -- Enum.KeyCode
+ToggleKey = 0x2D               -- Windows key code`) + table(["Keys", "Names"], [
+      ["Letters", `${c('"A"')} to ${c('"Z"')}`],
+      ["Numbers", `${c('"One"')} ... ${c('"Nine"')}, ${c('"Zero"')} (or ${c('"1"')} ... ${c('"0"')}); keypad: ${c('"KeypadOne"')} ...`],
+      ["Function keys", `${c('"F1"')} to ${c('"F12"')}`],
+      ["Modifiers", `${c('"LeftShift"')}, ${c('"RightShift"')}, ${c('"LeftControl"')}, ${c('"RightControl"')}, ${c('"LeftAlt"')}, ${c('"RightAlt"')}`],
+      ["Navigation", `${c('"Insert"')}, ${c('"Delete"')}, ${c('"Home"')}, ${c('"End"')}, ${c('"PageUp"')}, ${c('"PageDown"')}, ${c('"Up"')}, ${c('"Down"')}, ${c('"Left"')}, ${c('"Right"')}`],
+      ["Other", `${c('"Space"')}, ${c('"Tab"')}, ${c('"Return"')}, ${c('"Backspace"')}, ${c('"CapsLock"')}, ${c('"Escape"')}, ${c('"Minus"')}, ${c('"Equals"')}, ${c('"Comma"')}, ${c('"Period"')}, ${c('"Slash"')}, ${c('"Semicolon"')}, ${c('"Quote"')}, ${c('"LeftBracket"')}, ${c('"RightBracket"')}, ${c('"BackSlash"')}, ${c('"Backquote"')}`],
+      ["None", `${c('"None"')}, ${c("nil")} or ${c("false")}`],
+    ]) },
+
+  { group: "Guides", id: "guides/matcha", title: "Matcha notes", icon: "wrench", lead: "Matcha isn't a normal executor. Here's what GainUI does about that, and what it can't do.",
+    body: () => `
+<h2 id="drawn">Everything is drawn</h2>
+<p>Matcha can't create instances, so there are no ScreenGuis. Every window is made of Drawing objects: squares, text, lines, circles and images. They're redrawn every frame from a pool, and a property is only written when it changes, so an idle window costs almost nothing.</p>
+<h2 id="input">Input</h2>
+<ul>
+<li><b>No mouse wheel.</b> Matcha can't read it. Pages scroll by dragging them, dragging the scrollbar, or with <kbd>Page Up</kbd> / <kbd>Page Down</kbd> and the arrow keys while pointing at them.</li>
+<li><b>Clicks count on release.</b> So pressing and dragging scrolls instead of clicking whatever you started on.</li>
+<li><b>The game doesn't get your clicks.</b> While the mouse is over the window, or you're typing or binding a key, GainUI calls ${c("setrobloxinput(false)")}, and gives input back afterwards.</li>
+<li><b>Clicks land off?</b> Some setups report the mouse a few pixels away from where it's drawn. Users can fix it in <b>Settings → Mouse offset</b>, or you can set ${c("MouseOffset")}. The value is saved.</li>
+<li><b>Roblox must be focused.</b> Keys and clicks are read with ${c("iskeypressed")} and ${c("ismouse1pressed")}. They're ignored while another window is in front.</li>
+</ul>
+<h2 id="callbacks">Callbacks</h2>
+<p>The window runs from a ${c("RenderStepped")} connection. That keeps it alive after your script finishes (in Matcha, a loop in a spawned thread can stop resuming). Callbacks run inside that step and are wrapped in ${c("pcall")}: an error is printed and the window keeps going.</p>
+${hint(`Keep callbacks short. For anything that waits or loops, start your own thread: ${c("Callback = function(on) task.spawn(doLongThing, on) end")}. Button callbacks already get their own thread.`)}
+<h2 id="text">Text</h2>
+<p>Matcha draws text a little higher than its position. GainUI shifts it back, and measures text with ${c("TextBounds")} so long labels get trimmed with ".." instead of overflowing.</p>
+<h2 id="unload">Unloading</h2>
+<p>${c("Window:Destroy()")} (or <b>Settings → Unload</b>) removes every drawing, disconnects the render step, gives input back to the game, saves flags and calls your ${c("OnUnload")}. Disconnect your own connections there.</p>
+${code(`local conn = game:GetService("RunService").Heartbeat:Connect(function() ... end)
+
+local Window = GainUI:CreateWindow({
+    Title = "My Script",
+    OnUnload = function()
+        conn:Disconnect()
+    end,
+})`)}` },
+
+  { group: "Guides", id: "guides/migrate", title: "Coming from Rayfield", icon: "swap", lead: "Most Rayfield-style scripts only need their window line changed.",
+    body: () => code(`-- Rayfield
+local Window = Rayfield:CreateWindow({Name = "My Script"})
+local Tab = Window:CreateTab("Main")
+Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
+Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})
+
+-- GainUI: same element calls, a different window line
+local Window = GainUI:CreateWindow({Title = "My Script"})
+local Tab = Window:CreateTab("Main")
+Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
+Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})`) + table(["Rayfield", "GainUI"], [
+      [c("CreateWindow({Name})"), c("CreateWindow({Title})")],
+      [c("ConfigurationSaving = {Enabled, FileName}"), c("ConfigName")],
+      [c("Rayfield:Notify({Title, Content, Duration})"), `${c("Window:Notify")} or ${c("GainUI:Notify")}`],
+      [c("Flags[flag].CurrentValue"), c("Flags[flag].Value")],
+      [c("Element:Set(v)"), `${c("Element:Set(v)")} (same)`],
+    ]) + hint("Icons, key systems and Discord invites aren't part of GainUI.", "warn") },
+];
+
+// Routing & rendering
+const byId = Object.fromEntries(PAGES.map(p => [p.id, p]));
+const side = document.getElementById("side"), doc = document.getElementById("doc"), tocEl = document.getElementById("toc");
+
+function renderSide(active) {
+  let html = "", group = null;
+  for (const p of PAGES) {
+    if (p.group !== group) { group = p.group; html += `<h6>${group}</h6>`; }
+    html += `<a href="#/${p.id}" class="${p.id === active ? "on" : ""}">${svg(p.icon)}${p.title}</a>`;
+  }
+  side.innerHTML = html;
+}
+function highlight(src) {
+  const KW = /\b(local|function|end|if|then|else|elseif|for|in|do|while|repeat|until|return|and|or|not|nil|true|false|break)\b/;
+  const re = /(--[^\n]*)|("(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*')|\b(0x[0-9a-fA-F]+|\d+(?:\.\d+)?)\b|\b([A-Za-z_]\w*)\b(?=\s*\()|\b([A-Za-z_]\w*)\b/g;
+  return src.replace(re, (m, com, str, num, fn, word) => {
+    if (com) return `<span class="tok-com">${com}</span>`;
+    if (str) return `<span class="tok-str">${str}</span>`;
+    if (num) return `<span class="tok-num">${num}</span>`;
+    if (fn) return KW.test(fn) ? `<span class="tok-kw">${fn}</span>` : `<span class="tok-fn">${fn}</span>`;
+    if (word && KW.test(word) && word.match(KW)[0] === word) return `<span class="tok-kw">${word}</span>`;
+    return m;
+  });
+}
+function slug(t) { return t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""); }
+
+function render() {
+  const hash = location.hash.replace(/^#\/?/, "");
+  const [pid, anchor] = hash.split("#");
+  const page = byId[pid] || byId[""];
+  const idx = PAGES.indexOf(page);
+  const prev = PAGES[idx - 1], next = PAGES[idx + 1];
+  doc.innerHTML = `
+    <div class="crumbs">${page.group}<span>›</span>${page.title}</div>
+    <div class="title-row">${svg(page.icon)}<h1>${page.title}</h1></div>
+    <p class="lead">${page.lead}</p>
+    ${page.body()}
+    <nav class="pager">
+      ${prev ? `<a href="#/${prev.id}"><span>‹</span><span><small>Previous</small><b>${prev.title}</b></span></a>` : ""}
+      ${next ? `<a class="next" href="#/${next.id}"><span><small>Next</small><b>${next.title}</b></span><span>›</span></a>` : ""}
+    </nav>
+    <p class="updated">${UPDATED}</p>`;
+  // code highlighting (after escaping, so only our spans are HTML)
+  doc.querySelectorAll('code[data-lang="lua"]').forEach(el => { el.innerHTML = highlight(el.innerHTML.replace(/&quot;/g, '"')); });
+  doc.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
+    const text = btn.closest(".code").querySelector("code").innerText;
+    navigator.clipboard.writeText(text).then(() => { btn.textContent = "Copied"; setTimeout(() => btn.textContent = "Copy", 1200); });
+  }));
+  // headings: ids, anchors and the "on this page" list
+  const heads = [...doc.querySelectorAll("h2, h3")];
+  let toc = heads.length ? "<b>On this page</b>" : "";
+  heads.forEach(h => {
+    h.id = h.id || slug(h.textContent);
+    h.insertAdjacentHTML("beforeend", `<a class="anchor" href="#/${page.id}#${h.id}">#</a>`);
+    toc += `<a href="#/${page.id}#${h.id}" data-id="${h.id}" class="${h.tagName === "H3" ? "sub" : ""}">${h.childNodes[0].textContent}</a>`;
+  });
+  tocEl.innerHTML = toc;
+  renderSide(page.id);
+  side.classList.remove("open");
+  document.title = page.id ? `${page.title} | GainUI` : "GainUI";
+  if (anchor) { const t = document.getElementById(anchor); if (t) { t.scrollIntoView(); return; } }
+  window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", render);
+
+// "On this page" follows the scroll
+window.addEventListener("scroll", () => {
+  const links = tocEl.querySelectorAll("a[data-id]");
+  let cur = null;
+  links.forEach(a => { const h = document.getElementById(a.dataset.id); if (h && h.getBoundingClientRect().top < 120) cur = a; });
+  links.forEach(a => a.classList.toggle("on", a === cur));
+}, {passive: true});
+
+// Search
+const sd = document.getElementById("sd"), sq = document.getElementById("sq"), sres = document.getElementById("sres");
+const index = PAGES.map(p => {
+  const div = document.createElement("div"); div.innerHTML = p.body();
+  return {p, text: (p.title + " " + p.lead + " " + div.textContent).replace(/\s+/g, " ")};
+});
+let sel = 0;
+function search() {
+  const q = sq.value.trim().toLowerCase();
+  const words = q.split(/\s+/).filter(Boolean);
+  const hits = !q ? index.slice(0, 8) : index.filter(e => words.every(w => e.text.toLowerCase().includes(w)))
+    .sort((a, b) => (b.p.title.toLowerCase().includes(q)) - (a.p.title.toLowerCase().includes(q)));
+  sel = 0;
+  sres.innerHTML = hits.length ? hits.map((e, i) => {
+    let snip = e.p.lead;
+    if (q) { const at = e.text.toLowerCase().indexOf(words[0]); if (at > 0) snip = "..." + e.text.slice(Math.max(0, at - 40), at + 80) + "..."; }
+    return `<a href="#/${e.p.id}" class="${i === 0 ? "sel" : ""}">${e.p.title}<small>${esc(snip)}</small></a>`;
+  }).join("") : `<div class="none">No results for "${esc(q)}"</div>`;
+}
+function openSearch() { sd.classList.add("open"); sq.value = ""; search(); setTimeout(() => sq.focus(), 0); }
+function closeSearch() { sd.classList.remove("open"); }
+document.getElementById("searchBtn").addEventListener("click", openSearch);
+sd.addEventListener("click", e => { if (e.target === sd || e.target.closest("a")) closeSearch(); });
+sq.addEventListener("input", search);
+sq.addEventListener("keydown", e => {
+  const items = [...sres.querySelectorAll("a")];
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + items.length) % Math.max(1, items.length);
+    items.forEach((a, i) => a.classList.toggle("sel", i === sel));
+    items[sel] && items[sel].scrollIntoView({block: "nearest"});
+  } else if (e.key === "Enter" && items[sel]) { location.hash = items[sel].getAttribute("href"); closeSearch(); }
+  else if (e.key === "Escape") closeSearch();
+});
+document.addEventListener("keydown", e => {
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); sd.classList.contains("open") ? closeSearch() : openSearch(); }
+  else if (e.key === "/" && !sd.classList.contains("open") && document.activeElement.tagName !== "INPUT") { e.preventDefault(); openSearch(); }
+});
+
+// Theme
+const root = document.documentElement;
+try { const t = localStorage.getItem("gainui-theme"); if (t) root.dataset.theme = t; } catch (e) {}
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : !matchMedia("(prefers-color-scheme: light)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("gainui-theme", root.dataset.theme); } catch (e) {}
+});
+document.getElementById("menuBtn").addEventListener("click", () => side.classList.toggle("open"));
+
+render();
+</script>
+</body>
+</html>
