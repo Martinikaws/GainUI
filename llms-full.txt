@@ -1,0 +1,770 @@
+# GainUI documentation
+
+GainUI is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so GainUI draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
+
+Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.GainUI):
+
+```lua
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+```
+
+Rules that matter when writing GainUI code:
+- Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
+- Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
+- Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
+- Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
+- Clean up in the window's OnUnload option; Window:Destroy() removes everything.
+
+---
+
+# Getting Started
+
+> A drawn GUI library for Matcha. Build a Gain-style window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.
+
+## Install
+
+Load the library at the top of your script. There's nothing to download: it always runs the latest version from GitHub.
+
+```lua
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+```
+
+> **Note:** Why `or _G.GainUI`? Matcha's `loadstring` drops return values, so GainUI also puts itself in `_G.GainUI`. This line works in Matcha and in executors that do return.
+
+## Your first window
+
+```lua
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+
+local Window = GainUI:CreateWindow({
+    Title = "My Script",
+    Subtitle = "v1.0",
+    ConfigName = "myscript", -- remembers every flagged value between runs
+})
+
+local Main = Window:Tab("Main")
+Main:Section("General")
+
+Main:Toggle({
+    Name = "Enabled",
+    Default = false,
+    Flag = "Enabled",
+    Callback = function(on)
+        print("Enabled:", on)
+    end,
+})
+
+Main:Slider({Name = "Walk speed", Min = 16, Max = 100, Default = 16, Suffix = " studs", Flag = "Speed",
+    Callback = function(v) print(v) end})
+
+Main:Button({Name = "Hello", Callback = function()
+    Window:Notify({Title = "Hello!", Content = "It works."})
+end})
+```
+
+Press `Right Shift` to show or hide the window. Drag it by the title. Every window also gets a **Settings** tab, where users can change the show/hide key and the accent color and unload the script.
+
+## Next steps
+
+- [Window](https://martinikaws.github.io/GainUI/md/window-create.md): Title, size, accent, keys and saving.
+- [Elements](https://martinikaws.github.io/GainUI/md/elements-toggle.md): Every control you can put in a tab.
+- [Matcha notes](https://martinikaws.github.io/GainUI/md/guides-matcha.md): What the library does for you, and its limits.
+- [Full example](https://martinikaws.github.io/GainUI/md/start-example.md): Every element in one script.
+
+---
+
+# Example
+
+> One script that uses every element. Paste it into Matcha to see them all.
+
+```lua
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+
+local Window = GainUI:CreateWindow({Title = "GainUI", Subtitle = "Example", ConfigName = "example"})
+
+local Main = Window:Tab("Main")
+Main:Section("Basics")
+Main:Label("Everything here is drawn with Matcha's Drawing library.")
+Main:Toggle({Name = "Enabled", Default = false, Flag = "Enabled", Callback = function(on) print("Enabled:", on) end})
+Main:Slider({Name = "Walk speed", Min = 16, Max = 100, Default = 16, Suffix = " studs", Flag = "Speed",
+    Callback = function(v) print("Speed:", v) end})
+Main:Button({Name = "Say hi", Callback = function()
+    Window:Notify({Title = "Hi!", Content = "Buttons run their callback when clicked.", Duration = 3})
+end})
+
+Main:Section("Choices")
+Main:Dropdown({Name = "Mode", Options = {"Legit", "Balanced", "Chaos"}, Default = "Balanced", Flag = "Mode",
+    Callback = function(opt) print("Mode:", opt) end})
+Main:Dropdown({Name = "Parts", Options = {"Head", "Torso", "Arms", "Legs"}, Multi = true, Default = {"Head"},
+    Flag = "Parts", Callback = function(list) print(table.concat(list, ", ")) end})
+Main:Textbox({Name = "Player name", Placeholder = "Type and press Enter", Flag = "Target",
+    Callback = function(text) print("Target:", text) end})
+
+local Extra = Window:Tab("Extra")
+Extra:Keybind({Name = "Say something", Default = "G", Flag = "SayKey", Callback = function()
+    Window:Notify({Title = "Keybind", Content = "You pressed the key."})
+end})
+Extra:Keybind({Name = "Hold to show", Default = "H", Mode = "Hold", Callback = function(held) print(held) end})
+Extra:Colorpicker({Name = "Box color", Default = Color3.fromRGB(255, 80, 80), Flag = "BoxColor",
+    Callback = function(c) print(c) end})
+Extra:Paragraph({Title = "About", Content = "Long tabs scroll: drag the page or its bar, or use Page Up / Page Down."})
+
+print("Speed is", GainUI.Flags.Speed.Value)
+```
+
+The same file is in the repository as [example.lua](https://github.com/Martinikaws/GainUI/blob/main/example.lua).
+
+---
+
+# CreateWindow
+
+> Makes a window and returns it. A script can make more than one.
+
+```lua
+GainUI:CreateWindow(options: table) -> Window
+```
+
+```lua
+local Window = GainUI:CreateWindow({
+    Title = "My Script",
+    Subtitle = "v1.0",
+    ConfigName = "myscript",
+    ToggleKey = "RightShift",
+    Accent = "568cff",
+    Size = {620, 460},
+})
+```
+
+## Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | string | `"GainUI"` | Shown at the top of the sidebar. |
+| `Subtitle` | string | none | A smaller line under the title, in the accent color. |
+| `ConfigName` | string | none | Saves flagged elements to `Folder/ConfigName.json`. Without it nothing is saved. See [Saving](https://martinikaws.github.io/GainUI/md/window-saving.md). |
+| `Folder` | string | `"GainUI"` | The workspace folder settings are saved in. |
+| `ToggleKey` | key | `"RightShift"` | The key that shows and hides the window. See [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md). |
+| `Accent` | hex / Color3 | `"568cff"` | The highlight color. Users can change it in Settings. |
+| `Size` | {w, h} | `{620, 460}` | Window size in pixels (at least 460 × 320). It shrinks to fit small screens. |
+| `Open` | boolean | `true` | Start shown. With `false`, the window waits for the toggle key. |
+| `Settings` | boolean | `true` | Add the built-in Settings tab (show/hide key, accent, mouse offset, reset, unload). |
+| `MouseOffset` | number | `0` | Pixels added to the mouse's y. Users can adjust it in Settings if clicks land off. |
+| `Theme` | table | none | Override colors: `bg`, `side`, `panel`, `card`, `cardHover`, `line`, `text`, `dim`, `faint` (hex strings or Color3). |
+| `OnUnload` | function | none | Runs when the window is destroyed (from code or Settings → Unload). Clean up your connections here. |
+
+> **Note:** The window starts centered. Users can drag it by the title area, and it remembers where it was until the script ends.
+
+---
+
+# Window methods
+
+> Everything a window can do after it's made.
+
+| Method | Description |
+| --- | --- |
+| `Window:Tab(name) -> Tab` | Adds a tab to the sidebar. Aliases: `CreateTab`, `AddTab`. |
+| `Window:SelectTab(tab \| name)` | Switches to a tab. |
+| `Window:Notify(options)` | Shows a notification. See [Notifications](https://martinikaws.github.io/GainUI/md/window-notify.md). |
+| `Window:Toggle(open?)` | Shows or hides the window. Without an argument, it flips. |
+| `Window:IsOpen() -> boolean` | Whether the window is shown. |
+| `Window:SetAccent(color)` | Changes the accent (hex string or Color3). |
+| `Window:GetAccent() -> Color3` | The current accent. |
+| `Window:SetToggleKey(key)` | Changes the show/hide key. |
+| `Window:GetToggleKey() -> string` | The show/hide key's name, like `"RightShift"`. |
+| `Window:SetTitle(title, subtitle?)` | Changes the title (and subtitle). |
+| `Window:Save()` | Saves flags right away (normally a second after the last change). |
+| `Window:Destroy()` | Removes the window and everything it drew, and gives input back to the game. Alias: `Unload`. |
+| `Window:Dump() -> string` | Every text on screen with its position. Handy for checking a layout from a script. |
+
+## Fields
+
+| Field | Description |
+| --- | --- |
+| `Window.Flags` | This window's flagged elements, by flag. |
+| `Window.Tabs` | The tabs, in order. |
+| `Window.SettingsTab` | The built-in Settings tab. Add your own elements to it if you like. |
+
+## Library functions
+
+| Function | Description |
+| --- | --- |
+| `GainUI:CreateWindow(options)` | Makes a window. Alias: `GainUI:Window`. |
+| `GainUI:Notify(options)` | A notification on the newest window. |
+| `GainUI:Destroy()` | Destroys every window. |
+| `GainUI.Flags` | Every flagged element from every window. |
+| `GainUI.Hex(hex) -> Color3` | `"ff5050"` to a Color3. |
+| `GainUI.KeyLabel(key) -> string` | How a key is shown, like `"Right Shift"`. |
+| `GainUI.Version` | The library version. |
+
+---
+
+# Notifications
+
+> Short messages that slide in at the bottom right, even while the window is hidden.
+
+```lua
+Window:Notify({Title, Content?, Duration?})
+```
+
+```lua
+Window:Notify({
+    Title = "Saved",
+    Content = "Your settings were saved.",
+    Duration = 4, -- seconds
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Title` | string | `"Notice"` | The bold first line. |
+| `Content` | string | none | More text. It wraps. |
+| `Duration` | number | `4` | Seconds before it fades out. A thin bar shows the time left. |
+
+Up to five show at once; the oldest goes first. `Window:Notify("Text")` works too, using the text as the title.
+
+---
+
+# Saving & Flags
+
+> Give an element a Flag and its value is saved and restored between runs.
+
+```lua
+local Window = GainUI:CreateWindow({Title = "My Script", ConfigName = "myscript"})
+local Main = Window:Tab("Main")
+
+Main:Toggle({Name = "Enabled", Flag = "Enabled", Callback = function(on) ... end})
+
+-- anywhere later:
+if GainUI.Flags.Enabled.Value then ... end
+```
+
+## How it works
+
+- With a `ConfigName`, flagged values are written to `GainUI/<ConfigName>.json` in Matcha's workspace, a second after the last change and when the window is destroyed.
+- When the script runs again, each flagged element starts from its saved value instead of its `Default`.
+- For a restored value, the element's `Callback` runs once on the first frame, so your script applies it just like a click would. Keybinds are the exception: they only fire on a key press.
+- The show/hide key, the accent and the mouse offset from the Settings tab are saved too.
+
+## Reading flags
+
+`GainUI.Flags[flag]` (and `Window.Flags[flag]`) is the element itself, so you can read `.Value` or call `:Set()` from anywhere.
+
+```lua
+GainUI.Flags.Speed:Set(50)          -- moves the slider and runs its callback
+print(GainUI.Flags.Mode.Value)      -- "Balanced"
+```
+
+> **Note:** Flags must be unique across windows. Use a prefix like `"MyScript_Speed"` if several scripts share a session.
+
+## What gets saved
+
+| Element | Saved as |
+| --- | --- |
+| Toggle | true / false |
+| Slider | number |
+| Dropdown | string, or a list for Multi |
+| Textbox | string |
+| Keybind | key name, like `"G"` or `"None"` |
+| Colorpicker | `{"color": "ff5050"}` |
+
+---
+
+# Overview
+
+> Every control you can put in a tab. Each one returns an object you can read and change later.
+
+- [Toggle](https://martinikaws.github.io/GainUI/md/elements-toggle.md): On/off switch
+- [Slider](https://martinikaws.github.io/GainUI/md/elements-slider.md): A number in a range
+- [Button](https://martinikaws.github.io/GainUI/md/elements-button.md): Runs a function
+- [Dropdown](https://martinikaws.github.io/GainUI/md/elements-dropdown.md): One or many options
+- [Textbox](https://martinikaws.github.io/GainUI/md/elements-textbox.md): Typed text
+- [Keybind](https://martinikaws.github.io/GainUI/md/elements-keybind.md): Rebindable keys
+- [Colorpicker](https://martinikaws.github.io/GainUI/md/elements-colorpicker.md): H, S, V, swatches, hex
+- [Tabs & Sections](https://martinikaws.github.io/GainUI/md/elements-tab.md): Pages and groups
+- [Label & Paragraph](https://martinikaws.github.io/GainUI/md/elements-label.md): Wrapped text
+- [Image](https://martinikaws.github.io/GainUI/md/elements-image.md): From a link or bytes
+- [Notifications](https://martinikaws.github.io/GainUI/md/window-notify.md): Slide-in messages
+- [Saving & Flags](https://martinikaws.github.io/GainUI/md/window-saving.md): Remembered between runs
+
+All elements share the same methods: [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+---
+
+# Tabs & Sections
+
+> Tabs are the pages in the sidebar. Sections and dividers group the elements inside one.
+
+```lua
+Window:Tab(name: string) -> Tab
+```
+
+```lua
+local Main = Window:Tab("Main")
+Main:Section("Movement")
+Main:Toggle({Name = "Fly"})
+Main:Divider()
+Main:Toggle({Name = "Noclip"})
+```
+
+Elements stack from top to bottom in the order you add them. When a tab gets longer than the window, it scrolls: drag the page, drag its scrollbar, or use `Page Up` / `Page Down` and the arrow keys while pointing at it.
+
+## Section
+
+```lua
+Tab:Section(name: string)
+```
+
+A small accent heading with a line, to split a tab into groups.
+
+## Divider
+
+```lua
+Tab:Divider()
+```
+
+A thin line with no text.
+
+> **Note:** The Settings tab always stays last, even for tabs you add after the window is made.
+
+---
+
+# Button
+
+> Runs a function when clicked.
+
+```lua
+Tab:Button({Name, Callback})
+```
+
+```lua
+Main:Button({
+    Name = "Teleport to spawn",
+    Callback = function()
+        print("clicked")
+    end,
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Callback` | function() | none | Runs on click, in its own thread, so it can wait. |
+
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+---
+
+# Toggle
+
+> An on/off switch.
+
+```lua
+Tab:Toggle({Name, Default?, Flag?, Callback?}) -> Element
+```
+
+```lua
+local Esp = Main:Toggle({
+    Name = "Show names",
+    Default = false,
+    Flag = "ShowNames",
+    Callback = function(on)
+        print("Show names:", on)
+    end,
+})
+
+Esp:Set(true)       -- turn it on from code
+print(Esp.Value)    -- true
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Default` | boolean | `false` | The starting state. |
+| `Flag` | string | none | Saves the state. See [Saving](https://martinikaws.github.io/GainUI/md/window-saving.md). |
+| `Callback` | function(on) | none | Runs with the new state when it changes. |
+
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+---
+
+# Slider
+
+> Picks a number in a range by dragging.
+
+```lua
+Tab:Slider({Name, Min, Max, Default?, Increment?, Suffix?, Flag?, Callback?}) -> Element
+```
+
+```lua
+Main:Slider({
+    Name = "Field of view",
+    Min = 70,
+    Max = 120,
+    Default = 90,
+    Increment = 1,
+    Suffix = "°",
+    Flag = "FOV",
+    Callback = function(v)
+        print("FOV:", v)
+    end,
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Min` | number | `0` | The lowest value. `Range = {min, max}` works too. |
+| `Max` | number | `100` | The highest value. |
+| `Default` | number | `Min` | The starting value. |
+| `Increment` | number | `1` | Step size. Use `0.1` or `0.01` for decimals. |
+| `Suffix` | string | none | Shown after the value, like `" studs"` or `"%"`. |
+| `Flag` | string | none | Saves the value. |
+| `Callback` | function(value) | none | Runs with each new value while dragging. |
+
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+> **Note:** `:Set(v)` clamps to the range and rounds to the increment.
+
+---
+
+# Dropdown
+
+> Picks one option, or several, from a list.
+
+```lua
+Tab:Dropdown({Name, Options, Default?, Multi?, Flag?, Callback?}) -> Element
+```
+
+```lua
+local Mode = Main:Dropdown({
+    Name = "Mode",
+    Options = {"Legit", "Balanced", "Chaos"},
+    Default = "Balanced",
+    Flag = "Mode",
+    Callback = function(option)
+        print("Mode:", option)
+    end,
+})
+
+-- pick several
+Main:Dropdown({
+    Name = "Parts",
+    Options = {"Head", "Torso", "Arms", "Legs"},
+    Multi = true,
+    Default = {"Head"},
+    Callback = function(list)
+        print(table.concat(list, ", "))
+    end,
+})
+
+-- new options later (for example a player list)
+Mode:Refresh({"A", "B", "C"})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Options` | {string} | `{}` | The choices. |
+| `Default` | string / {string} | none | The starting choice (a list with Multi). |
+| `Multi` | boolean | `false` | Let users pick several. The value becomes a list. |
+| `Flag` | string | none | Saves the choice. |
+| `Callback` | function(value) | none | Runs with the choice (or the list) when it changes. |
+
+## Refresh
+
+```lua
+Dropdown:Refresh(options: {string}, keep: boolean?)
+```
+
+Replaces the options. Unless `keep` is true, the value resets to the first option (or an empty list with Multi).
+
+> **Note:** The list opens under the box (above it near the bottom of the window) and shows seven rows at a time. Drag it or use the arrow keys to scroll. Clicking outside closes it.
+
+---
+
+# Textbox
+
+> Lets users type text.
+
+```lua
+Tab:Textbox({Name, Placeholder?, Default?, Numeric?, ClearOnFocusLost?, Flag?, Callback?}) -> Element
+```
+
+```lua
+Main:Textbox({
+    Name = "Player name",
+    Placeholder = "Type and press Enter",
+    Flag = "Target",
+    Callback = function(text)
+        print("Target:", text)
+    end,
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Placeholder` | string | `""` | Grey text while it's empty. |
+| `Default` | string | `""` | The starting text. |
+| `Numeric` | boolean | `false` | Only keep a number (anything else becomes empty). |
+| `ClearOnFocusLost` | boolean | `false` | Empty the box after each entry, for command-style input. |
+| `Flag` | string | none | Saves the text. |
+| `Callback` | function(text) | none | Runs when typing ends: `Enter`, `Esc`, or clicking somewhere else. |
+
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+> **Note:** While a box is focused, typing goes to it and not to the game, and the show/hide key doesn't work. Letters, digits, space and common symbols are supported, with `Shift` for capitals; hold `Backspace` to delete quickly.
+
+---
+
+# Keybind
+
+> A key users can rebind, which runs your function when pressed.
+
+```lua
+Tab:Keybind({Name, Default?, Mode?, Flag?, Callback?, Changed?}) -> Element
+```
+
+```lua
+Main:Keybind({
+    Name = "Toggle fly",
+    Default = "F",
+    Mode = "Toggle",
+    Flag = "FlyKey",
+    Callback = function(state)
+        print("Fly:", state)
+    end,
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Default` | key | none | The starting key, like `"F"` or `"LeftAlt"`. See [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md). |
+| `Mode` | string | `"Press"` | `"Press"`: runs on each press. `"Toggle"`: flips a state on each press and passes it. `"Hold"`: passes `true` on press and `false` on release. |
+| `Flag` | string | none | Saves the key. |
+| `Callback` | function(state?) | none | Runs on the key, as described in Mode. |
+| `Changed` | function(keyName) | none | Runs when the user rebinds it, with the new key's name (or `"None"`). |
+
+## Rebinding
+
+Click the key chip, then press a key. `Esc` cancels and `Backspace` clears it to None. Keybinds work while the window is hidden, but not while typing in a text box.
+
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+---
+
+# Colorpicker
+
+> Picks a color with hue, saturation and brightness bars, swatches, or a hex code.
+
+```lua
+Tab:Colorpicker({Name, Default?, Flag?, Callback?}) -> Element
+```
+
+```lua
+Main:Colorpicker({
+    Name = "Box color",
+    Default = Color3.fromRGB(255, 80, 80), -- or "ff5050"
+    Flag = "BoxColor",
+    Callback = function(color)
+        print(color)
+    end,
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Name` | string | none | The label. |
+| `Default` | Color3 / hex | the accent | The starting color. |
+| `Flag` | string | none | Saves the color. |
+| `Callback` | function(Color3) | none | Runs with each new color while picking. |
+
+Clicking the swatch opens the picker: drag the **H**, **S** and **V** bars, click one of the ten swatches, or click the hex box and type a code like `ff5050` (then `Enter`). Alias: `ColorPicker`.
+
+Returns the element. Keep it to change it later: `:Set(value)`, `:Get()`, `.Value`; see [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md).
+
+---
+
+# Label & Paragraph
+
+> Text that explains things. Both wrap to the page's width.
+
+## Label
+
+```lua
+Tab:Label(text | {Text, Color?}) -> Element
+```
+
+```lua
+local Status = Main:Label("Waiting...")
+Status:SetText("Ready!")
+
+Main:Label({Text = "Something went wrong", Color = "f05a5a"})
+```
+
+## Paragraph
+
+```lua
+Tab:Paragraph({Title, Content}) -> Element
+```
+
+```lua
+local Info = Main:Paragraph({
+    Title = "How to use",
+    Content = "Turn on Enabled, then pick a mode. Your choices are saved.",
+})
+Info:Set("New content")               -- content only
+Info:Set("New title", "New content")  -- both
+```
+
+---
+
+# Image
+
+> Shows a picture, downloaded from a link or given as bytes.
+
+```lua
+Tab:Image({Url | Data, Height?, Width?}) -> Element
+```
+
+```lua
+Main:Image({
+    Url = "https://example.com/banner.png",
+    Height = 120,
+})
+```
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `Url` | string | none | Downloaded with `game:HttpGet` when the element is made. It shows "Loading..." until the download finishes. |
+| `Data` | string | none | The image's bytes, if you already have them (for example from readfile). |
+| `Height` | number | `120` | Height in pixels. |
+| `Width` | number | page width | Width in pixels, centered. |
+
+> **Warning:** Use PNG or JPG. Matcha's `writefile` refuses the .png extension, so if you cache images in the workspace, save them with another extension like .dat.
+
+---
+
+# Element methods
+
+> Every element returns an object you can read and change later.
+
+| Method / field | Description |
+| --- | --- |
+| `el.Value` | The current value (state, number, option, text, key code or Color3). |
+| `el:Set(value, silent?)` | Changes the value and runs the callback (unless `silent` is true). Aliases: `SetValue`. |
+| `el:Get()` | The value. Alias: `GetValue`. |
+| `el:SetName(text)` | Changes the label. |
+| `el:SetVisible(bool)` | Hides or shows the element. The elements below move up. |
+| `el:SetText(text)` | Labels only: changes the text. |
+| `el:Refresh(options, keep?)` | Dropdowns only: new options. |
+| `el.Name / el.Flag / el.Kind` | The label, the flag, and the kind (`"Toggle"`, `"Slider"`, ...). |
+
+## Aliases
+
+If you're coming from another library, the familiar names work too:
+
+| GainUI | Also works |
+| --- | --- |
+| `Tab:Toggle` | `AddToggle`, `CreateToggle` |
+| `Tab:Textbox` | `Input`, `AddInput`, `CreateInput`, `AddTextbox` |
+| `Tab:Colorpicker` | `ColorPicker`, `AddColorPicker`, `CreateColorPicker` |
+| `(every element)` | `Add<Kind>` and `Create<Kind>` |
+| `Slider options` | `Range = {min, max}`, `Rounding` for Increment, `CurrentValue` for Default |
+| `Dropdown options` | `Values` for Options, `MultipleOptions` for Multi, `CurrentOption` for Default |
+
+---
+
+# Key names
+
+> Keys can be given by name, key code, or Enum.KeyCode.
+
+```lua
+ToggleKey = "RightShift"       -- name
+ToggleKey = Enum.KeyCode.Insert -- Enum.KeyCode
+ToggleKey = 0x2D               -- Windows key code
+```
+
+| Keys | Names |
+| --- | --- |
+| Letters | `"A"` to `"Z"` |
+| Numbers | `"One"` ... `"Nine"`, `"Zero"` (or `"1"` ... `"0"`); keypad: `"KeypadOne"` ... |
+| Function keys | `"F1"` to `"F12"` |
+| Modifiers | `"LeftShift"`, `"RightShift"`, `"LeftControl"`, `"RightControl"`, `"LeftAlt"`, `"RightAlt"` |
+| Navigation | `"Insert"`, `"Delete"`, `"Home"`, `"End"`, `"PageUp"`, `"PageDown"`, `"Up"`, `"Down"`, `"Left"`, `"Right"` |
+| Other | `"Space"`, `"Tab"`, `"Return"`, `"Backspace"`, `"CapsLock"`, `"Escape"`, `"Minus"`, `"Equals"`, `"Comma"`, `"Period"`, `"Slash"`, `"Semicolon"`, `"Quote"`, `"LeftBracket"`, `"RightBracket"`, `"BackSlash"`, `"Backquote"` |
+| None | `"None"`, `nil` or `false` |
+
+---
+
+# Matcha notes
+
+> Matcha isn't a normal executor. Here's what GainUI does about that, and what it can't do.
+
+## Everything is drawn
+
+Matcha can't create instances, so there are no ScreenGuis. Every window is made of Drawing objects: squares, text, lines, circles and images. They're redrawn every frame from a pool, and a property is only written when it changes, so an idle window costs almost nothing.
+
+## Input
+
+- **No mouse wheel.** Matcha can't read it. Pages scroll by dragging them, dragging the scrollbar, or with `Page Up` / `Page Down` and the arrow keys while pointing at them.
+- **Clicks count on release.** So pressing and dragging scrolls instead of clicking whatever you started on.
+- **The game doesn't get your clicks.** While the mouse is over the window, or you're typing or binding a key, GainUI calls `setrobloxinput(false)`, and gives input back afterwards.
+- **Clicks land off?** Some setups report the mouse a few pixels away from where it's drawn. Users can fix it in **Settings → Mouse offset**, or you can set `MouseOffset`. The value is saved.
+- **Roblox must be focused.** Keys and clicks are read with `iskeypressed` and `ismouse1pressed`. They're ignored while another window is in front.
+
+## Callbacks
+
+The window runs from a `RenderStepped` connection. That keeps it alive after your script finishes (in Matcha, a loop in a spawned thread can stop resuming). Callbacks run inside that step and are wrapped in `pcall`: an error is printed and the window keeps going.
+
+> **Note:** Keep callbacks short. For anything that waits or loops, start your own thread: `Callback = function(on) task.spawn(doLongThing, on) end`. Button callbacks already get their own thread.
+
+## Text
+
+Matcha draws text a little higher than its position. GainUI shifts it back, and measures text with `TextBounds` so long labels get trimmed with ".." instead of overflowing.
+
+## Unloading
+
+`Window:Destroy()` (or **Settings → Unload**) removes every drawing, disconnects the render step, gives input back to the game, saves flags and calls your `OnUnload`. Disconnect your own connections there.
+
+```lua
+local conn = game:GetService("RunService").Heartbeat:Connect(function() ... end)
+
+local Window = GainUI:CreateWindow({
+    Title = "My Script",
+    OnUnload = function()
+        conn:Disconnect()
+    end,
+})
+```
+
+---
+
+# Coming from Rayfield
+
+> Most Rayfield-style scripts only need their window line changed.
+
+```lua
+-- Rayfield
+local Window = Rayfield:CreateWindow({Name = "My Script"})
+local Tab = Window:CreateTab("Main")
+Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
+Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})
+
+-- GainUI: same element calls, a different window line
+local Window = GainUI:CreateWindow({Title = "My Script"})
+local Tab = Window:CreateTab("Main")
+Tab:CreateToggle({Name = "Fly", CurrentValue = false, Flag = "Fly", Callback = function(v) end})
+Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue = 16, Callback = function(v) end})
+```
+
+| Rayfield | GainUI |
+| --- | --- |
+| `CreateWindow({Name})` | `CreateWindow({Title})` |
+| `ConfigurationSaving = {Enabled, FileName}` | `ConfigName` |
+| `Rayfield:Notify({Title, Content, Duration})` | `Window:Notify` or `GainUI:Notify` |
+| `Flags[flag].CurrentValue` | `Flags[flag].Value` |
+| `Element:Set(v)` | `Element:Set(v)` (same) |
+
+> **Warning:** Icons, key systems and Discord invites aren't part of GainUI.

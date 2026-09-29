@@ -223,6 +223,27 @@ td:first-child code { white-space: nowrap; }
   background-color: rgba(30,38,56,.7); font-size: 13px; transition: opacity .25s, transform .35s var(--ease); pointer-events: none; }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 
+/* MCP button and the page menu */
+.ai-btn { border-color: rgba(194,156,255,.35); background: linear-gradient(160deg, rgba(194,156,255,.16), rgba(91,147,255,.08)); }
+.ai-btn:hover { border-color: rgba(194,156,255,.6); background: linear-gradient(160deg, rgba(194,156,255,.24), rgba(91,147,255,.12)); }
+.ai-btn svg { color: #d9c2ff; }
+.crumb-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.crumb-row .crumbs { margin: 0; }
+.copy-page { font: 600 11.5px Comfortaa, sans-serif; color: var(--muted); background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.08); border-radius: 9px; padding: 5px 11px; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.copy-page:hover { color: var(--txt); background: rgba(255,255,255,.1); }
+.copy-page svg { width: 13px; height: 13px; }
+.page-menu { position: relative; display: inline-flex; }
+.page-menu .copy-page { border-radius: 9px 0 0 9px; }
+.page-menu .more { border-radius: 0 9px 9px 0; border-left: none; padding: 5px 8px; }
+.menu { position: absolute; right: 0; top: calc(100% + 6px); z-index: 20; min-width: 250px; padding: 6px; border-radius: 14px; background-color: rgba(20,26,40,.92); display: none; }
+.menu.open { display: block; }
+.menu button, .menu a { display: flex; align-items: flex-start; gap: 10px; width: 100%; text-align: left; padding: 8px 10px; border-radius: 9px; border: none; background: none;
+  color: var(--txt); font: 600 12.5px Comfortaa, sans-serif; cursor: pointer; }
+.menu button:hover, .menu a:hover { background: rgba(255,255,255,.08); text-decoration: none; }
+.menu svg { width: 16px; height: 16px; flex: none; margin-top: 1px; color: var(--muted); }
+.menu small { display: block; color: var(--muted); font-weight: 400; font-size: 11.5px; margin-top: 2px; }
+.menu hr { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: 5px 4px; }
+
 /* Search */
 .sd { position: fixed; inset: 0; z-index: 80; background: rgba(6,9,15,.5); -webkit-backdrop-filter: blur(12px) saturate(140%); backdrop-filter: blur(12px) saturate(140%);
   display: none; align-items: flex-start; justify-content: center; padding: 12vh 16px 0; }
@@ -241,6 +262,7 @@ td:first-child code { white-space: nowrap; }
   .search-pill { min-width: 0; } .search-pill .label, .search-pill kbd { display: none; }
 }
 @media (max-width: 620px) {
+  .nav-right .ai-label { display: none; }
   .nav { padding: 0 14px; gap: 10px; }
   .nav-right .gh-label { display: none; }
   .page-wrap { padding: 0 16px; }
@@ -261,6 +283,7 @@ td:first-child code { white-space: nowrap; }
   <span class="nav-sub">Drawn GUIs for Matcha</span>
   <div class="nav-right">
     <button class="search-pill glass" id="searchBtn" aria-label="Search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="label">Search the docs</span><kbd>Ctrl K</kbd></button>
+    <button class="btn ai-btn" id="aiBtn" title="Copy the MCP server URL: add it to Claude, Cursor or VS Code and your AI can read these docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span class="ai-label">MCP</span></button>
     <a class="btn" href="https://github.com/Martinikaws/GainUI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg><span class="gh-label">GitHub</span></a>
   </div>
 </header>
@@ -778,6 +801,77 @@ const home = PAGES.find(p => p.id === "");
 home.title = "Getting Started";
 home.hero = true;
 
+// Markdown copies of the pages, for AI tools: "Copy page", llms.txt and
+// llms-full.txt (tools/build-llms.js writes those from this same code).
+const SITE = "https://martinikaws.github.io/GainUI/";
+const LLMS = SITE + "llms.txt", LLMS_FULL = SITE + "llms-full.txt";
+const mdName = id => (id || "index").replace(/\//g, "-") + ".md";
+const mdUrl = id => SITE + "md/" + mdName(id);
+function unesc(s) { return s.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&amp;/g, "&"); }
+function mdInline(h) {
+  return unesc(h
+    .replace(/<svg[\s\S]*?<\/svg>/g, "")
+    .replace(/<code>([\s\S]*?)<\/code>/g, (m, c) => "`" + c + "`")
+    .replace(/<kbd>([\s\S]*?)<\/kbd>/g, (m, c) => "`" + c + "`")
+    .replace(/<b>([\s\S]*?)<\/b>/g, "**$1**")
+    .replace(/<a [^>]*href="#\/([^"#]*)(#[^"]*)?"[^>]*>([\s\S]*?)<\/a>/g, (m, id, anchor, t) => `[${t}](${mdUrl(id)})`)
+    .replace(/<a [^>]*href="([^"]*)"[^>]*>([\s\S]*?)<\/a>/g, "[$2]($1)")
+    .replace(/<[^>]+>/g, "")).replace(/[ \t]+/g, " ").trim();
+}
+function htmlToMd(h) {
+  const blocks = [];
+  const keep = s => { blocks.push(s); return `\n@@B${blocks.length - 1}@@\n`; };
+  h = h
+    .replace(/<div class="code">[\s\S]*?<code data-lang="(\w+)">([\s\S]*?)<\/code><\/pre><\/div>/g, (m, lang, c) => keep("```" + lang + "\n" + unesc(c) + "\n```"))
+    .replace(/<div class="sig">([\s\S]*?)<\/div>/g, (m, c) => keep("```lua\n" + unesc(c) + "\n```"))
+    .replace(/<div class="hint\s*(warn)?\s*">[\s\S]*?<\/svg><div>([\s\S]*?)<\/div><\/div>/g, (m, warn, c) => keep(`> **${warn ? "Warning" : "Note"}:** ${mdInline(c)}`))
+    .replace(/<div class="table-wrap"><table>([\s\S]*?)<\/table><\/div>/g, (m, t) => {
+      const rows = [...t.matchAll(/<tr>([\s\S]*?)<\/tr>/g)].map(r => [...r[1].matchAll(/<t[hd]>([\s\S]*?)<\/t[hd]>/g)].map(c => mdInline(c[1]).replace(/\|/g, "\\|")));
+      if (!rows.length) return "";
+      return keep([`| ${rows[0].join(" | ")} |`, `| ${rows[0].map(() => "---").join(" | ")} |`, ...rows.slice(1).map(r => `| ${r.join(" | ")} |`)].join("\n"));
+    })
+    .replace(/<a class="tile" href="#\/([^"]*)"><div class="mock">[\s\S]*?<\/div><b>([^<]*)<\/b><span>([^<]*)<\/span><\/a>/g, (m, id, t, d) => keep(`- [${t}](${mdUrl(id)}): ${d}`))
+    .replace(/<a class="card" href="#\/([^"]*)"><b>([\s\S]*?)<\/b><span>([\s\S]*?)<\/span><\/a>/g, (m, id, t, d) => keep(`- [${mdInline(t)}](${mdUrl(id)}): ${mdInline(d)}`))
+    .replace(/<h2[^>]*>([\s\S]*?)<\/h2>/g, (m, t) => keep("## " + mdInline(t)))
+    .replace(/<h3[^>]*>([\s\S]*?)<\/h3>/g, (m, t) => keep("### " + mdInline(t)))
+    .replace(/<li>([\s\S]*?)<\/li>/g, (m, t) => keep("- " + mdInline(t)))
+    .replace(/<p[^>]*>([\s\S]*?)<\/p>/g, (m, t) => keep(mdInline(t)));
+  const out = [];
+  for (const part of h.split("\n")) {
+    const b = part.match(/^@@B(\d+)@@$/);
+    if (b) out.push(blocks[+b[1]]);
+    else { const t = mdInline(part); if (t) out.push(t); }
+  }
+  // list items stay together; everything else gets a blank line between
+  return out.reduce((acc, cur, i) => acc + (i === 0 ? "" : (cur.startsWith("- ") && out[i - 1].startsWith("- ") ? "\n" : "\n\n")) + cur, "");
+}
+function pageMarkdown(p) {
+  return `# ${p.title}\n\n> ${p.lead}\n\n${htmlToMd(p.body())}\n`;
+}
+const LLMS_INTRO = `GainUI is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so GainUI draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
+
+Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.GainUI):
+
+\`\`\`lua
+${LOAD}
+\`\`\`
+
+Rules that matter when writing GainUI code:
+- Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
+- Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
+- Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
+- Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
+- Clean up in the window's OnUnload option; Window:Destroy() removes everything.`;
+function llmsTxt() {
+  const groups = [...new Set(PAGES.map(p => p.group))];
+  return `# GainUI\n\n> A drawn GUI library for Matcha (Roblox): Gain-style windows with tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.\n\n${LLMS_INTRO}\n\n` +
+    groups.map(g => `## ${g}\n\n` + PAGES.filter(p => p.group === g).map(p => `- [${p.title}](${mdUrl(p.id)}): ${p.lead}`).join("\n")).join("\n\n") +
+    `\n\n## Optional\n\n- [All docs in one file](${LLMS_FULL}): every page above, in order\n- [Library source](${RAW}): GainUI.lua\n- [Example script](https://raw.githubusercontent.com/Martinikaws/GainUI/main/example.lua): every element once\n`;
+}
+function llmsFull() {
+  return `# GainUI documentation\n\n${LLMS_INTRO}\n\n` + PAGES.map(p => pageMarkdown(p).replace(/^# /, "---\n\n# ")).join("\n");
+}
+
 // Routing & rendering
 const byId = Object.fromEntries(PAGES.map(p => [p.id, p]));
 const groupsEl = document.getElementById("groups"), pillsEl = document.getElementById("pills"), doc = document.getElementById("doc");
@@ -836,6 +930,7 @@ function heroHead(page) {
   </div>`;
 }
 
+let current = null;
 function render() {
   const hash = location.hash.replace(/^#\/?/, "");
   const [pid, anchor] = hash.split("#");
@@ -845,7 +940,17 @@ function render() {
   let body = page.body();
   if (page.hero) body += `<h2 id="elements">Elements</h2>` + tileGrid();
   doc.innerHTML = (page.hero ? heroHead(page) : `
-    <div class="crumbs"><b>${GROUP_LABEL[page.group] || page.group}</b><span>›</span>${page.title}</div>
+    <div class="crumb-row"><div class="crumbs"><b>${GROUP_LABEL[page.group] || page.group}</b><span>›</span>${page.title}</div>
+      <div class="page-menu"><button class="copy-page" data-copy-page>${svg("code")}Copy page</button><button class="copy-page more" data-menu aria-label="More">▾</button>
+        <div class="menu glass" id="pageMenu">
+          <button data-act="page">${svg("code")}<span>Copy page<small>This page as Markdown, for any AI</small></span></button>
+          <a href="md/${mdName(page.id)}" target="_blank">${svg("text")}<span>View as Markdown<small>The plain text of this page</small></span></a>
+          <hr>
+          <a data-act="claude" target="_blank" rel="noopener">${svg("book")}<span>Open in Claude<small>Ask about this page</small></span></a>
+          <a data-act="chatgpt" target="_blank" rel="noopener">${svg("book")}<span>Open in ChatGPT<small>Ask about this page</small></span></a>
+          <hr>
+          <button data-act="mcp">${svg("layers")}<span>Copy MCP server URL<small>Add it to Claude, Cursor or VS Code</small></span></button>
+        </div></div></div>
     <div class="title-row"><span class="title-ico">${svg(page.icon)}</span><h1>${page.title}</h1></div>
     <p class="lead">${page.lead}</p><div class="jump" id="jump"></div>`) + body + `
     <nav class="pager">
@@ -858,6 +963,9 @@ function render() {
     copy(btn.closest(".code").querySelector("code").innerText, "Code copied");
   }));
   doc.querySelectorAll("[data-copy-loader]").forEach(b => b.addEventListener("click", copyLoader));
+  doc.querySelectorAll("[data-copy-page]").forEach(b => b.addEventListener("click", () => copy(pageMarkdown(page), "Page copied as Markdown")));
+  bindPageMenu(page);
+  current = page;
   // headings: ids, anchors, and the jump chips under the lead
   const heads = [...doc.querySelectorAll("h2")];
   const jump = document.getElementById("jump");
@@ -895,6 +1003,30 @@ function copy(text, msg) { navigator.clipboard.writeText(text).then(() => toast(
 function copyLoader() { copy(LOAD, "Loader copied - paste it at the top of your script"); }
 document.getElementById("copyLoader").addEventListener("click", copyLoader);
 document.getElementById("loaderText").textContent = LOAD;
+
+// MCP: GitMCP serves this site's llms.txt as a remote MCP server, so one URL
+// is all an AI tool needs.
+const MCP_URL = "https://martinikaws.gitmcp.io/GainUI";
+function copyMcp() { copy(MCP_URL, "MCP server URL copied - add it as a custom MCP server"); }
+document.getElementById("aiBtn").addEventListener("click", copyMcp);
+function askUrl(site, page) {
+  const prompt = `Read ${mdUrl(page.id)} (GainUI docs: a drawn GUI library for the Matcha Roblox executor; everything is in ${LLMS_FULL}). Then help me with it.`;
+  return (site === "claude" ? "https://claude.ai/new?q=" : "https://chatgpt.com/?q=") + encodeURIComponent(prompt);
+}
+function bindPageMenu(page) {
+  const menu = document.getElementById("pageMenu");
+  if (!menu) return;
+  menu.querySelector('[data-act="claude"]').href = askUrl("claude", page);
+  menu.querySelector('[data-act="chatgpt"]').href = askUrl("chatgpt", page);
+  menu.querySelector('[data-act="page"]').addEventListener("click", () => { copy(pageMarkdown(page), "Page copied as Markdown"); menu.classList.remove("open"); });
+  menu.querySelector('[data-act="mcp"]').addEventListener("click", () => { copyMcp(); menu.classList.remove("open"); });
+  doc.querySelector("[data-menu]").addEventListener("click", e => { e.stopPropagation(); menu.classList.toggle("open"); });
+}
+document.addEventListener("click", e => {
+  const menu = document.getElementById("pageMenu");
+  if (menu && !e.target.closest(".page-menu")) menu.classList.remove("open");
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") { const m = document.getElementById("pageMenu"); if (m) m.classList.remove("open"); } });
 
 // Search
 const sd = document.getElementById("sd"), sq = document.getElementById("sq"), sres = document.getElementById("sres");

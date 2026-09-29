@@ -4,6 +4,8 @@ A drawn GUI library for [Matcha](https://matcha-latte.gitbook.io/matcha). Window
 
 **Docs:** https://martinikaws.github.io/GainUI/
 
+**Use with AI:** add `https://martinikaws.gitmcp.io/GainUI` as a custom MCP server in Claude, Cursor or VS Code and your assistant can read these docs. Plain-text copies: [`llms.txt`](https://martinikaws.github.io/GainUI/llms.txt), [`llms-full.txt`](https://martinikaws.github.io/GainUI/llms-full.txt).
+
 ```lua
 local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
 

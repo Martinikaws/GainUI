@@ -1,0 +1,57 @@
+# GainUI
+
+> A drawn GUI library for Matcha (Roblox): Gain-style windows with tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.
+
+GainUI is a GUI library for Matcha, an external Luau executor for Roblox. Matcha can't create instances, so GainUI draws windows with Matcha's Drawing library: tabs, toggles, sliders, dropdowns, text boxes, keybinds, color pickers, labels, images, notifications, and settings saved to JSON by flag.
+
+Load it at the top of a script (Matcha's loadstring drops return values, so the library also sets _G.GainUI):
+
+```lua
+local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
+```
+
+Rules that matter when writing GainUI code:
+- Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
+- Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
+- Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
+- Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
+- Clean up in the window's OnUnload option; Window:Destroy() removes everything.
+
+## Introduction
+
+- [Getting Started](https://martinikaws.github.io/GainUI/md/index.md): A drawn GUI library for Matcha. Build a Gain-style window with tabs, toggles, sliders, dropdowns and keybinds in a few lines.
+- [Example](https://martinikaws.github.io/GainUI/md/start-example.md): One script that uses every element. Paste it into Matcha to see them all.
+
+## Window
+
+- [CreateWindow](https://martinikaws.github.io/GainUI/md/window-create.md): Makes a window and returns it. A script can make more than one.
+- [Window methods](https://martinikaws.github.io/GainUI/md/window-methods.md): Everything a window can do after it's made.
+- [Notifications](https://martinikaws.github.io/GainUI/md/window-notify.md): Short messages that slide in at the bottom right, even while the window is hidden.
+- [Saving & Flags](https://martinikaws.github.io/GainUI/md/window-saving.md): Give an element a Flag and its value is saved and restored between runs.
+
+## Elements
+
+- [Overview](https://martinikaws.github.io/GainUI/md/elements.md): Every control you can put in a tab. Each one returns an object you can read and change later.
+- [Tabs & Sections](https://martinikaws.github.io/GainUI/md/elements-tab.md): Tabs are the pages in the sidebar. Sections and dividers group the elements inside one.
+- [Button](https://martinikaws.github.io/GainUI/md/elements-button.md): Runs a function when clicked.
+- [Toggle](https://martinikaws.github.io/GainUI/md/elements-toggle.md): An on/off switch.
+- [Slider](https://martinikaws.github.io/GainUI/md/elements-slider.md): Picks a number in a range by dragging.
+- [Dropdown](https://martinikaws.github.io/GainUI/md/elements-dropdown.md): Picks one option, or several, from a list.
+- [Textbox](https://martinikaws.github.io/GainUI/md/elements-textbox.md): Lets users type text.
+- [Keybind](https://martinikaws.github.io/GainUI/md/elements-keybind.md): A key users can rebind, which runs your function when pressed.
+- [Colorpicker](https://martinikaws.github.io/GainUI/md/elements-colorpicker.md): Picks a color with hue, saturation and brightness bars, swatches, or a hex code.
+- [Label & Paragraph](https://martinikaws.github.io/GainUI/md/elements-label.md): Text that explains things. Both wrap to the page's width.
+- [Image](https://martinikaws.github.io/GainUI/md/elements-image.md): Shows a picture, downloaded from a link or given as bytes.
+- [Element methods](https://martinikaws.github.io/GainUI/md/elements-methods.md): Every element returns an object you can read and change later.
+
+## Guides
+
+- [Key names](https://martinikaws.github.io/GainUI/md/guides-keys.md): Keys can be given by name, key code, or Enum.KeyCode.
+- [Matcha notes](https://martinikaws.github.io/GainUI/md/guides-matcha.md): Matcha isn't a normal executor. Here's what GainUI does about that, and what it can't do.
+- [Coming from Rayfield](https://martinikaws.github.io/GainUI/md/guides-migrate.md): Most Rayfield-style scripts only need their window line changed.
+
+## Optional
+
+- [All docs in one file](https://martinikaws.github.io/GainUI/llms-full.txt): every page above, in order
+- [Library source](https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua): GainUI.lua
+- [Example script](https://raw.githubusercontent.com/Martinikaws/GainUI/main/example.lua): every element once
