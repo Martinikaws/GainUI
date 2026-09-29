@@ -17,7 +17,13 @@ Main:Toggle({Name = "Enabled", Default = false, Flag = "Enabled", Callback = fun
 end})
 ```
 
-`example.lua` uses every element once.
+See everything working: run the showcase in Matcha.
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()
+```
+
+`example.lua` is a shorter script that uses every element once.
 
 ## Why
 

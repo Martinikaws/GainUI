@@ -1,6 +1,18 @@
 # Example
 
-> One script that uses every element. Paste it into Matcha to see them all.
+> See every element working: run the showcase, or read a short script that uses each one.
+
+## Showcase
+
+One line in Matcha opens a window that demonstrates everything: every element, the methods that change them from code, the window's own methods, labels and images, and scrolling. What you change shows up live, and the values are saved between runs.
+
+```lua
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()
+```
+
+> **Note:** Right Shift shows and hides it. Its source is [showcase.lua](https://github.com/Martinikaws/GainUI/blob/main/showcase.lua), a good place to copy from.
+
+## A short example
 
 ```lua
 local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI

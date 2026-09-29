@@ -327,6 +327,7 @@ td:first-child code { white-space: nowrap; }
 const RAW = "https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua";
 const LOAD = `local GainUI = loadstring(game:HttpGet("${RAW}"))() or _G.GainUI`;
 const UPDATED = "Updated for GainUI 1.0.0";
+const SHOWCASE = `loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/showcase.lua"))()`;
 
 // Icons (lucide-style strokes)
 const I = {
@@ -408,8 +409,12 @@ end})`)}
   <a class="card" href="#/start/example"><b>Full example</b><span>Every element in one script.</span></a>
 </div>` },
 
-  { group: "Introduction", id: "start/example", title: "Example", icon: "play", lead: "One script that uses every element. Paste it into Matcha to see them all.",
-    body: () => code(`${LOAD}
+  { group: "Introduction", id: "start/example", title: "Example", icon: "play", lead: "See every element working: run the showcase, or read a short script that uses each one.",
+    body: () => `<h2 id="showcase">Showcase</h2>
+<p>One line in Matcha opens a window that demonstrates everything: every element, the methods that change them from code, the window's own methods, labels and images, and scrolling. What you change shows up live, and the values are saved between runs.</p>
+${code(SHOWCASE)}
+${hint(`Right Shift shows and hides it. Its source is <a href="https://github.com/Martinikaws/GainUI/blob/main/showcase.lua" target="_blank" rel="noopener">showcase.lua</a>, a good place to copy from.`)}
+<h2 id="example">A short example</h2>` + code(`${LOAD}
 
 local Window = GainUI:CreateWindow({Title = "GainUI", Subtitle = "Example", ConfigName = "example"})
 
@@ -1111,7 +1116,7 @@ function heroHead(page) {
     <div>
       <h1>Gain-style windows, <em>drawn for Matcha</em></h1>
       <p class="lead">${page.lead}</p>
-      <div class="hero-actions"><button class="btn primary" data-copy-loader>Copy loader</button><a class="btn" href="#/start/example">See the example</a></div>
+      <div class="hero-actions"><button class="btn primary" data-copy-loader>Copy loader</button><button class="btn" data-copy-showcase>Copy the showcase</button><a class="btn" href="#/start/example">Examples</a></div>
     </div>
     <div class="preview"><div class="gw">
       <div class="gs"><div class="t">My Script</div><div class="st">v1.0</div><div class="tab on">Main</div><div class="tab">Visuals</div><div class="tab">Settings</div></div>
@@ -1157,6 +1162,7 @@ function render() {
     copy(btn.closest(".code").querySelector("code").innerText, "Code copied");
   }));
   doc.querySelectorAll("[data-copy-loader]").forEach(b => b.addEventListener("click", copyLoader));
+  doc.querySelectorAll("[data-copy-showcase]").forEach(b => b.addEventListener("click", () => copy(SHOWCASE, "Showcase copied - run it in Matcha")));
   doc.querySelectorAll("[data-copy-page]").forEach(b => b.addEventListener("click", () => copy(pageMarkdown(page), "Page copied as Markdown")));
   bindPageMenu(page);
   current = page;

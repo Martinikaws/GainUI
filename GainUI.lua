@@ -861,6 +861,10 @@ function GainUI:CreateWindow(opts)
 
     -- Tabs ---------------------------------------------------------------------
     local current
+    -- Switching tabs: the page slides up and fades in, and the sidebar's
+    -- highlight glides to the new tab.
+    local SWITCH_SECONDS, SWITCH_SLIDE = 0.2, 10
+    local switchAt, selY, frameDt = 0, nil, 0
     local Tab = {}
     Tab.__index = Tab
     local function add(tab, kind, o)
@@ -985,7 +989,7 @@ function GainUI:CreateWindow(opts)
         if type(tab) == "string" then
             for _, t in ipairs(self.Tabs) do if t.Name == tab then tab = t break end end
         end
-        if type(tab) == "table" then current = tab; popup = nil; blur() end
+        if type(tab) == "table" and tab ~= current then current = tab; popup = nil; blur(); switchAt = tick() end
     end
 
     -- Notifications ------------------------------------------------------------
@@ -1104,15 +1108,25 @@ function GainUI:CreateWindow(opts)
         text(fitText(title, SIDEBAR - 28, 16, true), x + 16, y + 14, C.text, 16, 5, true)
         if subtitle then text(fitText(subtitle, SIDEBAR - 28, 12), x + 16, y + 33, C.accent, 12, 5) end
 
-        -- Tabs
+        -- Tabs. The highlight is drawn once, where it is on its way to the
+        -- selected tab (kept relative to the window, so dragging doesn't lag).
+        current = current or Window.Tabs[1]
         local ty = y + 62
+        for i, tab in ipairs(Window.Tabs) do
+            if tab == current then
+                local target = 62 + (i - 1) * 34
+                selY = selY and (selY + (target - selY) * math.min(1, frameDt * 16)) or target
+                if math.abs(target - selY) < 0.5 then selY = target end
+            end
+        end
+        if selY then
+            rect(x + 8, y + selY, SIDEBAR - 16, 30, C.card, 2, 6)
+            rect(x + 8, y + selY + 8, 2, 14, C.accent, 3, 1)
+        end
         for _, tab in ipairs(Window.Tabs) do
             local sel = tab == current
             local hot = over(x + 8, ty, SIDEBAR - 16, 30)
-            if sel then
-                rect(x + 8, ty, SIDEBAR - 16, 30, C.card, 2, 6)
-                rect(x + 8, ty + 8, 2, 14, C.accent, 3, 1)
-            elseif hot then
+            if hot and not sel then
                 rect(x + 8, ty, SIDEBAR - 16, 30, C.panel, 2, 6)
             end
             text(fitText(tab.Name, SIDEBAR - 40, 13), x + 22, ty + 8, sel and C.text or C.dim, 13, 5, sel)
@@ -1124,13 +1138,18 @@ function GainUI:CreateWindow(opts)
         local hint = keyLabel(toggleVK) .. " hides"
         text(fitText(hint, SIDEBAR - 28, 12), x + 16, y + h - 26, C.faint, 12, 5)
 
-        -- Page
-        current = current or Window.Tabs[1]
+        -- Page (sliding in after a switch)
         local px, py = x + SIDEBAR + 16, y + 16
         local pw, ph = w - SIDEBAR - 42, h - 32
         if current then
-            text(current.Name, px, py, C.text, 18, 5, true)
-            drawPage(current, px, py + 34, pw, ph - 34)
+            local t = math.min(1, (tick() - switchAt) / SWITCH_SECONDS)
+            local eased = 1 - (1 - t) ^ 3
+            local fade = Fade
+            Fade = fade * eased
+            local slideY = math.floor((1 - eased) * SWITCH_SLIDE + 0.5)
+            text(current.Name, px, py + slideY, C.text, 18, 5, true)
+            drawPage(current, px, py + 34 + slideY, pw, ph - 34)
+            Fade = fade
         end
         return over(x, y, w, h)
     end
@@ -1210,6 +1229,7 @@ function GainUI:CreateWindow(opts)
         local now = tick()
         local dt = math.min(0.05, now - (lastFrame or now))
         lastFrame = now
+        frameDt = dt
         if open then shown = math.min(1, shown + dt / OPEN_SECONDS)
         else shown = math.max(0, shown - dt / CLOSE_SECONDS) end
 
