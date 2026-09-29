@@ -242,6 +242,10 @@ td:first-child code { white-space: nowrap; }
 .menu button:hover, .menu a:hover { background: rgba(255,255,255,.08); text-decoration: none; }
 .menu svg { width: 16px; height: 16px; flex: none; margin-top: 1px; color: var(--muted); }
 .menu small { display: block; color: var(--muted); font-weight: 400; font-size: 11.5px; margin-top: 2px; }
+.nav-mcp .menu { min-width: 290px; top: calc(100% + 8px); }
+.nav-mcp .caret { font-size: 10px; opacity: .7; margin-left: -2px; }
+.menu-head { padding: 8px 10px 6px; font-weight: 700; font-size: 13px; }
+.menu-head small { display: block; color: var(--muted); font-weight: 400; font-size: 11.5px; margin-top: 2px; }
 .menu hr { border: none; border-top: 1px solid rgba(255,255,255,.07); margin: 5px 4px; }
 
 /* Search */
@@ -283,7 +287,18 @@ td:first-child code { white-space: nowrap; }
   <span class="nav-sub">Drawn GUIs for Matcha</span>
   <div class="nav-right">
     <button class="search-pill glass" id="searchBtn" aria-label="Search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span class="label">Search the docs</span><kbd>Ctrl K</kbd></button>
-    <button class="btn ai-btn" id="aiBtn" title="Copy the MCP server URL: add it to Claude, Cursor or VS Code and your AI can read these docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span class="ai-label">MCP</span></button>
+    <div class="page-menu nav-mcp"><button class="btn ai-btn" id="aiBtn" aria-haspopup="true" title="Connect your AI to these docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1z"/><path d="M19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/></svg><span class="ai-label">MCP</span><span class="caret">▾</span></button>
+      <div class="menu glass" id="mcpMenu">
+        <div class="menu-head">Connect your AI<small>It learns GainUI and Matcha from these docs.</small></div>
+        <button data-mcp="url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/></svg><span>Copy MCP server URL<small>Paste it into any MCP client</small></span></button>
+        <hr>
+        <button data-mcp="claude-code"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6M12 19h8"/></svg><span>Claude Code<small>Copies the command to run in a terminal</small></span></button>
+        <button data-mcp="claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.9L19 10l-5.2 2.1L12 17l-1.8-4.9L5 10l5.2-2.1z"/></svg><span>Claude app<small>Settings → Connectors → Add custom connector, paste the URL</small></span></button>
+        <button data-mcp="cursor"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span>Cursor<small>Copies the JSON for .cursor/mcp.json</small></span></button>
+        <button data-mcp="vscode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m16 18 6-6-6-6M8 6l-6 6 6 6"/></svg><span>VS Code<small>Copies the JSON for .vscode/mcp.json</small></span></button>
+        <hr>
+        <a href="llms.txt" target="_blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 6.1H3M21 12.1H3M15.1 18H3"/></svg><span>View llms.txt<small>Everything the AI reads, as one file</small></span></a>
+      </div></div>
     <a class="btn" href="https://github.com/Martinikaws/GainUI" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg><span class="gh-label">GitHub</span></a>
   </div>
 </header>
@@ -389,7 +404,7 @@ end})`)}
 <div class="cards">
   <a class="card" href="#/window/create"><b>Window</b><span>Title, size, accent, keys and saving.</span></a>
   <a class="card" href="#/elements/toggle"><b>Elements</b><span>Every control you can put in a tab.</span></a>
-  <a class="card" href="#/guides/matcha"><b>Matcha notes</b><span>What the library does for you, and its limits.</span></a>
+  <a class="card" href="#/matcha"><b>Matcha</b><span>What Matcha supports, and the quirks that break scripts.</span></a>
   <a class="card" href="#/start/example"><b>Full example</b><span>Every element in one script.</span></a>
 </div>` },
 
@@ -722,7 +737,7 @@ ToggleKey = 0x2D               -- Windows key code`) + table(["Keys", "Names"], 
       ["None", `${c('"None"')}, ${c("nil")} or ${c("false")}`],
     ]) },
 
-  { group: "Guides", id: "guides/matcha", title: "Matcha notes", icon: "wrench", lead: "Matcha isn't a normal executor. Here's what GainUI does about that, and what it can't do.",
+  { group: "Guides", id: "guides/matcha", title: "How GainUI handles Matcha", icon: "wrench", lead: "What GainUI does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.",
     body: () => `
 <h2 id="drawn">Everything is drawn</h2>
 <p>Matcha can't create instances, so there are no ScreenGuis. Every window is made of Drawing objects: squares, text, lines, circles and images. They're redrawn every frame from a pool, and a property is only written when it changes, so an idle window costs almost nothing.</p>
@@ -801,6 +816,171 @@ const home = PAGES.find(p => p.id === "");
 home.title = "Getting Started";
 home.hero = true;
 
+// Matcha: what the environment has and how it behaves, so people (and AI
+// tools reading llms.txt) write scripts that work in it. Checked against the
+// official docs and in Matcha 1.0.0.
+const MATCHA_DOCS = "https://matcha-latte.gitbook.io/matcha";
+const fnTable = rows => table(["Function", "Description"], rows.map(([s, d]) => [c(s), d]));
+PAGES.push(
+  { group: "Matcha", id: "matcha", title: "Matcha basics", icon: "wrench",
+    lead: "Matcha is an external Luau VM for Roblox. It works differently from a normal executor, and scripts have to be written for that.",
+    body: () => `
+<h2 id="what">What Matcha is</h2>
+<p>Matcha runs <b>outside</b> the Roblox client. It doesn't hook the engine; it reads and writes the game's memory and emulates the Roblox API on top of that. So it only has the classes, properties and functions it implements. The <a href="${MATCHA_DOCS}" target="_blank" rel="noopener">official docs</a> list them, and the pages here add what we found in practice.</p>
+<h2 id="rules">Rules that break scripts</h2>
+<ul>
+<li><b>Bindings are a fixed list.</b> Reading a property Matcha doesn't support doesn't error: it falls back to ${c("FindFirstChild")} and gives ${c("nil")}. An unexplained ${c("nil")} usually means "unsupported". <b>Writing</b> an unsupported property errors (${c("Unknown property")}).</li>
+<li><b>No instances.</b> There is no ${c("Instance.new")}, so no ScreenGuis, parts or sounds of your own. Draw UI with the <a href="#/matcha/drawing">Drawing library</a> (that's what GainUI does).</li>
+<li><b>${c("loadstring")} drops return values.</b> ${c('loadstring("return 5")()')} gives nothing, even through ${c("pcall")}. Share values through ${c("_G")} instead; there is no ${c("getgenv")} or ${c("shared")}. That's why GainUI loads with ${c("... or _G.GainUI")}.</li>
+<li><b>Threads can stop.</b> A ${c("task.spawn")} loop that waits with ${c("task.wait")} can stop resuming once the script that started it has finished. For anything that must keep running, connect to ${c("RunService.Heartbeat")} or ${c("RenderStepped")} and throttle inside it.</li>
+<li><b>No mouse wheel.</b> ${c("UserInputService.InputChanged")} is ${c("nil")}; only ${c("InputBegan")} and ${c("InputEnded")} exist. Poll input instead: ${c("iskeypressed")}, ${c("ismouse1pressed")} and ${c("Player:GetMouse()")} (${c("Mouse.X")} / ${c("Mouse.Y")}).</li>
+<li><b>Roblox must be focused</b> for key and mouse input, including ${c("keypress")} and ${c("mouse1click")}. Check ${c("isrbxactive()")}.</li>
+<li><b>Your clicks also reach the game.</b> Call ${c("setrobloxinput(false)")} while the mouse is over your UI, and ${c("setrobloxinput(true)")} afterwards.</li>
+<li><b>Autoexec runs before the game exists.</b> ${c("game.GameId")} is ${c("0")} until it loads, and yielding at the top level of an autoexec script errors. Wait inside ${c("task.spawn")} for ${c("game:IsLoaded()")} and ${c("LocalPlayer")}, then check ${c("game.GameId")} before doing anything game-specific.</li>
+<li><b>Files:</b> ${c("writefile")} refuses some extensions (${c(".png")} among them). Save binary data with another extension such as ${c(".dat")}.</li>
+<li><b>Memory functions</b> need unsafe Luau execution enabled in Matcha. A bad ${c("memory_write")} can crash the game.</li>
+</ul>
+<h2 id="patterns">Patterns that work</h2>
+${code(`-- only in one game, and only once it has loaded (safe in autoexec)
+local GAME_ID = 6035872082
+task.spawn(function()
+    while not (game:IsLoaded() and game:GetService("Players").LocalPlayer) do task.wait(0.5) end
+    if game.GameId ~= GAME_ID then return end
+    -- ...
+end)
+
+-- something that keeps running: a connection, throttled
+local last = 0
+local conn = game:GetService("RunService").Heartbeat:Connect(function()
+    if tick() - last < 0.5 then return end
+    last = tick()
+    -- ...
+end)
+
+-- a value another script can reach (loadstring can't return it)
+_G.MyScript = {stop = function() conn:Disconnect() end}`)}
+${hint(`The Matcha-specific files: <a href="${MATCHA_DOCS}/llms-full.txt" target="_blank" rel="noopener">official docs as one text file</a>. Everything on these pages is also in GainUI's <a href="llms.txt" target="_blank">llms.txt</a>.`)}` },
+
+  { group: "Matcha", id: "matcha/functions", title: "Functions", icon: "code",
+    lead: "Every global function Matcha has, including the ones the official docs don't list yet.",
+    body: () => `
+<h2 id="globals">Scripts and globals</h2>
+${fnTable([
+  ["loadstring(source, chunkname?) -> function?, error?", "Compiles code. The function it gives back runs, but its return values are lost (see Matcha basics)."],
+  ["require(path) -> table", "Runs a workspace file ending in .lua or .luau."],
+  ["decompile(script) -> string", "Decompiles a LocalScript or ModuleScript."],
+  ["getscripts() -> {Instance}", "All scripts in the game."],
+  ["getscriptbytecode(script) -> string", "A script's bytecode."],
+  ["getscripthash(script) -> string", "A hash of a script's bytecode, to tell versions apart."],
+  ["getgc() / findgc(...)", "Garbage-collector access. Not documented; findgc is slow (tens of seconds)."],
+  ["identifyexecutor() -> string", 'The executor name and version, like "Matcha 1.0.0".'],
+  ["notify(message, title, seconds)", "A Matcha notification."],
+  ["WorldToScreen(position) -> Vector2, boolean", "A 3D point on screen, and whether it's visible."],
+  ["base64encode(s) / base64decode(s)", "Base64 conversion."],
+  ["setfflag(name, value) / getfflag(name)", "Fast flags (unfinished in Matcha)."],
+  ["print / printl / warn / error", "Console output."],
+])}
+<h2 id="input">Input</h2>
+${fnTable([
+  ["iskeypressed(keycode) -> boolean", 'Whether a key is held. Key codes are Windows virtual-key codes (0x41 = "A", 0xA1 = Right Shift).'],
+  ["ismouse1pressed() / ismouse2pressed() -> boolean", "Whether the left / right mouse button is held."],
+  ["keypress(keycode) / keyrelease(keycode)", "Presses / releases a key (Roblox must be focused)."],
+  ["mouse1press() / mouse1release() / mouse1click()", "The left button. mouse2... for the right one."],
+  ["mousemoveabs(x, y) / mousemoverel(dx, dy)", "Moves the cursor."],
+  ["mousescroll(amount)", "Scrolls the wheel (sending works; reading it doesn't)."],
+  ["setrobloxinput(enabled)", "false stops the game from receiving your input; true gives it back."],
+  ["isrbxactive() -> boolean", "Whether the Roblox window is focused."],
+  ["setclipboard(text)", "Copies text. (There is no getclipboard.)"],
+])}
+<h2 id="files">Files</h2>
+<p>All paths are relative to Matcha's workspace folder. Not in the official docs, but all present:</p>
+${fnTable([
+  ["readfile(path) -> string", "A file's contents."],
+  ["writefile(path, text)", "Writes a file (some extensions, like .png, are refused)."],
+  ["appendfile(path, text)", "Adds to the end of a file."],
+  ["isfile(path) / isfolder(path) -> boolean", "Whether it exists."],
+  ["makefolder(path) / delfolder(path) / delfile(path)", "Folders and deleting."],
+  ["listfiles(path) -> {string}", "A folder's contents."],
+])}
+<h2 id="memory">Memory</h2>
+${fnTable([
+  ["getbase() -> number", "RobloxPlayerBeta.exe's base address."],
+  ["memory_read(type, address) -> any", 'Reads "int", "float", "double", "byte", "string" or "uintptr_t".'],
+  ["memory_write(type, address, value)", "Writes one. Wrong types or addresses can crash the game."],
+])}
+${hint(`${c("Instance.Address")} gives any instance's address in memory. Memory functions need unsafe Luau execution enabled in Matcha's settings.`)}
+<h2 id="threads">Threads and time</h2>
+${fnTable([
+  ["task.spawn(fn, ...) / task.defer(fn, ...)", "Runs a function in a new thread."],
+  ["task.wait(seconds?) / task.delay(seconds, fn)", "Waits, or runs later. (Plain wait, spawn and tick exist too.)"],
+])}
+<h2 id="missing">Not available</h2>
+<p>${["Instance.new", "getgenv", "getrenv", "shared", "hookfunction", "getrawmetatable", "newcclosure", "request / http_request", "getcustomasset", "cloneref", "gethui", "fireclickdetector", "firetouchinterest", "loadfile", "getclipboard"].map(c).join(", ")}. Use ${c("game:HttpGet(url)")} for web requests and ${c("_G")} for shared state.</p>` },
+
+  { group: "Matcha", id: "matcha/classes", title: "Classes & datatypes", icon: "box",
+    lead: "The Roblox classes, properties and types Matcha supports. Anything else reads as nil.",
+    body: () => `
+${table(["Class", "What works"], [
+  ["DataModel (game)", `${c("PlaceId")}, ${c("GameId")}, ${c("JobId")}, ${c(":GetService(name)")}, ${c(":HttpGet(url)")}, ${c(":IsLoaded()")}`],
+  ["Instance (all)", `${c("Name")}, ${c("ClassName")}, ${c("Parent")} (writable), ${c("Address")}; ${c(":FindFirstChild(name, recursive?)")}, ${c(":FindFirstChildOfClass")}, ${c(":FindFirstChildWhichIsA")}, ${c(":WaitForChild")}, ${c(":GetChildren")}, ${c(":GetDescendants")}, ${c(":IsA")}, ${c(":IsDescendantOf")}, ${c(":GetFullName")}, ${c(":GetAttribute")}, ${c(":GetAttributes")}, ${c(":SetAttribute")}`],
+  ["Players", `${c("LocalPlayer")}, ${c(":GetPlayers()")}, ${c("PlayerAdded")}, ${c("PlayerRemoving")}`],
+  ["Player", `${c("Name")}, ${c("Character")}, ${c("Team")}, ${c(":GetMouse()")}`],
+  ["Mouse", `${c("X")}, ${c("Y")} (screen pixels)`],
+  ["Workspace", `${c("CurrentCamera")}`],
+  ["Camera", `${c("ViewportSize")}, ${c("FieldOfView")}, ${c("Position")}, ${c("lookAt(at, target)")}`],
+  ["BasePart / MeshPart", `${c("Size")}, ${c("Position")}, ${c("Transparency")}, ${c("Color")}, ${c("Velocity")}, ${c("AssemblyLinearVelocity")}, ${c("CanCollide")}; MeshPart ${c("MeshId")}, ${c("TextureId")}`],
+  ["Model / Humanoid", `${c("PrimaryPart")}; ${c("Health")}, ${c("MaxHealth")}`],
+  ["ValueBase (IntValue, StringValue...)", `${c("Value")}`],
+  ["GuiObject / TextLabel", `${c("AbsoluteSize")}, ${c("AbsolutePosition")}; TextLabel ${c("Text")} can be read, not written`],
+  ["HttpService", `${c(":JSONEncode")}, ${c(":JSONDecode")}, ${c(":GenerateGUID")}`],
+  ["UserInputService", `${c("InputBegan")}, ${c("InputEnded")} (no ${c("InputChanged")}, so no mouse wheel)`],
+  ["RunService", `${c("Heartbeat")}, ${c("RenderStepped")} connections`],
+])}
+<h2 id="types">Datatypes</h2>
+${table(["Type", "Constructors and fields"], [
+  ["Vector3", `${c("Vector3.new(x, y, z)")}; ${c("X")}, ${c("Y")}, ${c("Z")}`],
+  ["Vector2", `${c("Vector2.new(x, y)")}; ${c("X")}, ${c("Y")}`],
+  ["Color3", `${c("Color3.new(r, g, b)")} (0-1), ${c("fromRGB")}, ${c("fromHSV")}, ${c("fromHex")}; ${c("R")}, ${c("G")}, ${c("B")}`],
+])}
+${hint(`Check before you rely on something: read it and print it. ${c("nil")} where you expected a value means Matcha doesn't bind it.`)}` },
+
+  { group: "Matcha", id: "matcha/drawing", title: "Drawing", icon: "image",
+    lead: "Matcha's only way to put things on screen. Everything GainUI shows is made of these.",
+    body: () => sig("Drawing.new(kind: string) -> DrawingObject") + code(`local box = Drawing.new("Square")
+box.Position = Vector2.new(20, 20)
+box.Size = Vector2.new(200, 120)
+box.Color = Color3.fromRGB(86, 140, 255)
+box.Filled = true
+box.Corner = 8
+box.Visible = true
+
+task.wait(5)
+box:Remove()`) + `
+<h2 id="kinds">Kinds and properties</h2>
+${table(["Kind", "Properties"], [
+  ["All", `${c("Visible")}, ${c("Color")}, ${c("Transparency")} (1 = solid), ${c("ZIndex")}, ${c("Position")}; ${c(":Remove()")}`],
+  ["Square", `${c("Size")}, ${c("Filled")}, ${c("Thickness")}, ${c("Corner")} (rounded corners)`],
+  ["Line", `${c("From")}, ${c("To")}, ${c("Thickness")}`],
+  ["Circle", `${c("Radius")}, ${c("NumSides")}, ${c("Filled")}, ${c("Thickness")}`],
+  ["Triangle / Quad", `${c("PointA")}, ${c("PointB")}, ${c("PointC")} (Quad: ${c("PointD")}), ${c("Filled")}`],
+  ["Text", `${c("Text")}, ${c("Size")}, ${c("Font")}, ${c("Center")}, ${c("Outline")}; ${c("TextBounds")} (read: the drawn size)`],
+  ["Image", `${c("Data")} (the file's bytes, PNG or JPG), ${c("Size")}, ${c("Rounding")}. Not in the official docs.`],
+])}
+<h2 id="fonts">Fonts</h2>
+<p>${["UI", "System", "SystemBold", "Minecraft", "Monospace", "Pixel", "Fortnite", "ProximaSoftBold"].map(f => c("Drawing.Fonts." + f)).join(", ")}</p>
+<h2 id="tips">Tips</h2>
+<ul>
+<li><b>Reuse objects.</b> Keep a pool and hide what you don't draw this frame instead of making new ones every frame.</li>
+<li><b>Only write what changed.</b> Each property write costs something; compare with the last value first.</li>
+<li><b>Text sits high.</b> Matcha draws text about a third of its size above its Position; add ${c("size * 0.3")} to line it up.</li>
+<li><b>Measure text</b> with a hidden Text object's ${c("TextBounds")} to trim or center it.</li>
+<li><b>Images</b> come from bytes: ${c("game:HttpGet(url)")} or ${c("readfile")}. Cache downloads with a non-.png extension.</li>
+<li><b>Clean up.</b> Remove every object when your script unloads, or it stays on screen.</li>
+</ul>` },
+);
+GROUP_LABEL.Matcha = "Matcha";
+
+
 // Markdown copies of the pages, for AI tools: "Copy page", llms.txt and
 // llms-full.txt (tools/build-llms.js writes those from this same code).
 const SITE = "https://martinikaws.github.io/GainUI/";
@@ -856,17 +1036,31 @@ Load it at the top of a script (Matcha's loadstring drops return values, so the 
 ${LOAD}
 \`\`\`
 
+These docs cover GainUI and Matcha itself: the "Matcha" section lists what Matcha supports, what it doesn't, and the quirks that break scripts.
+
 Rules that matter when writing GainUI code:
 - Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
 - Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
 - Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
 - Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
-- Clean up in the window's OnUnload option; Window:Destroy() removes everything.`;
+- Clean up in the window's OnUnload option; Window:Destroy() removes everything.
+
+Rules that matter for any Matcha script:
+- There is no Instance.new, getgenv, hookfunction or request; share state through _G and fetch with game:HttpGet.
+- loadstring runs code but drops its return values.
+- Unsupported properties read as nil (no error); writing one errors.
+- Loops in spawned threads can stop resuming after the script ends; use RunService.Heartbeat / RenderStepped connections for ongoing work.
+- Input is polled: iskeypressed(vk), ismouse1pressed(), Player:GetMouse().X/Y; UserInputService.InputChanged doesn't exist (no mouse wheel).`;
 function llmsTxt() {
   const groups = [...new Set(PAGES.map(p => p.group))];
   return `# GainUI\n\n> A drawn GUI library for Matcha (Roblox): Gain-style windows with tabs, toggles, sliders, dropdowns, keybinds, color pickers and saved settings.\n\n${LLMS_INTRO}\n\n` +
     groups.map(g => `## ${g}\n\n` + PAGES.filter(p => p.group === g).map(p => `- [${p.title}](${mdUrl(p.id)}): ${p.lead}`).join("\n")).join("\n\n") +
-    `\n\n## Optional\n\n- [All docs in one file](${LLMS_FULL}): every page above, in order\n- [Library source](${RAW}): GainUI.lua\n- [Example script](https://raw.githubusercontent.com/Martinikaws/GainUI/main/example.lua): every element once\n`;
+    `\n\n## Optional\n\n- [All docs in one file](${LLMS_FULL}): every page above, in order\n- [Matcha's official docs](https://matcha-latte.gitbook.io/matcha/llms-full.txt): the Matcha API as its authors document it\n- [Library source](${RAW}): GainUI.lua\n- [Example script](https://raw.githubusercontent.com/Martinikaws/GainUI/main/example.lua): every element once\n`;
+}
+// llms.txt carries the whole docs after its index: MCP servers like GitMCP
+// hand this one file to the AI first, so it learns everything in one read.
+function llmsTxtFull() {
+  return llmsTxt() + "\n\n# Full documentation\n\n" + PAGES.map(p => pageMarkdown(p).replace(/^# /, "---\n\n# ")).join("\n");
 }
 function llmsFull() {
   return `# GainUI documentation\n\n${LLMS_INTRO}\n\n` + PAGES.map(p => pageMarkdown(p).replace(/^# /, "---\n\n# ")).join("\n");
@@ -1008,7 +1202,20 @@ document.getElementById("loaderText").textContent = LOAD;
 // is all an AI tool needs.
 const MCP_URL = "https://martinikaws.gitmcp.io/GainUI";
 function copyMcp() { copy(MCP_URL, "MCP server URL copied - add it as a custom MCP server"); }
-document.getElementById("aiBtn").addEventListener("click", copyMcp);
+const MCP_COPY = {
+  url: [MCP_URL, "MCP server URL copied - paste it into your AI's MCP settings"],
+  "claude-code": [`claude mcp add --transport http --scope user gainui-docs ${MCP_URL}`, "Claude Code command copied - run it in a terminal"],
+  claude: [MCP_URL, "URL copied - Claude: Settings → Connectors → Add custom connector"],
+  cursor: [JSON.stringify({mcpServers: {"gainui-docs": {url: MCP_URL}}}, null, 2), "Cursor config copied - merge it into .cursor/mcp.json"],
+  vscode: [JSON.stringify({servers: {"gainui-docs": {type: "http", url: MCP_URL}}}, null, 2), "VS Code config copied - merge it into .vscode/mcp.json"],
+};
+const mcpMenu = document.getElementById("mcpMenu");
+document.getElementById("aiBtn").addEventListener("click", e => { e.stopPropagation(); mcpMenu.classList.toggle("open"); });
+mcpMenu.querySelectorAll("[data-mcp]").forEach(b => b.addEventListener("click", () => {
+  const [text, msg] = MCP_COPY[b.dataset.mcp];
+  copy(text, msg);
+  mcpMenu.classList.remove("open");
+}));
 function askUrl(site, page) {
   const prompt = `Read ${mdUrl(page.id)} (GainUI docs: a drawn GUI library for the Matcha Roblox executor; everything is in ${LLMS_FULL}). Then help me with it.`;
   return (site === "claude" ? "https://claude.ai/new?q=" : "https://chatgpt.com/?q=") + encodeURIComponent(prompt);
@@ -1025,8 +1232,9 @@ function bindPageMenu(page) {
 document.addEventListener("click", e => {
   const menu = document.getElementById("pageMenu");
   if (menu && !e.target.closest(".page-menu")) menu.classList.remove("open");
+  if (!e.target.closest(".nav-mcp")) mcpMenu.classList.remove("open");
 });
-document.addEventListener("keydown", e => { if (e.key === "Escape") { const m = document.getElementById("pageMenu"); if (m) m.classList.remove("open"); } });
+document.addEventListener("keydown", e => { if (e.key === "Escape") { const m = document.getElementById("pageMenu"); if (m) m.classList.remove("open"); mcpMenu.classList.remove("open"); } });
 
 // Search
 const sd = document.getElementById("sd"), sq = document.getElementById("sq"), sres = document.getElementById("sres");

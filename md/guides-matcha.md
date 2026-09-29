@@ -1,6 +1,6 @@
-# Matcha notes
+# How GainUI handles Matcha
 
-> Matcha isn't a normal executor. Here's what GainUI does about that, and what it can't do.
+> What GainUI does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.
 
 ## Everything is drawn
 

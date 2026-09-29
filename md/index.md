@@ -49,5 +49,5 @@ Press `Right Shift` to show or hide the window. Drag it by the title. Every wind
 
 - [Window](https://martinikaws.github.io/GainUI/md/window-create.md): Title, size, accent, keys and saving.
 - [Elements](https://martinikaws.github.io/GainUI/md/elements-toggle.md): Every control you can put in a tab.
-- [Matcha notes](https://martinikaws.github.io/GainUI/md/guides-matcha.md): What the library does for you, and its limits.
+- [Matcha](https://martinikaws.github.io/GainUI/md/matcha.md): What Matcha supports, and the quirks that break scripts.
 - [Full example](https://martinikaws.github.io/GainUI/md/start-example.md): Every element in one script.

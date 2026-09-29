@@ -8,12 +8,21 @@ Load it at the top of a script (Matcha's loadstring drops return values, so the 
 local GainUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Martinikaws/GainUI/main/GainUI.lua"))() or _G.GainUI
 ```
 
+These docs cover GainUI and Matcha itself: the "Matcha" section lists what Matcha supports, what it doesn't, and the quirks that break scripts.
+
 Rules that matter when writing GainUI code:
 - Make a window with GainUI:CreateWindow({Title = ..., ConfigName = ...}), tabs with Window:Tab(name), and elements with Tab:Toggle / Slider / Dropdown / Textbox / Keybind / Colorpicker / Button / Label / Paragraph / Section / Divider / Image, each taking one options table.
 - Give an element a Flag to save it; read it anywhere with GainUI.Flags[flag].Value, and change it with :Set(value).
 - Callbacks run inside the render step and are pcall'd; start a thread (task.spawn) for anything that waits. Button callbacks already run in their own thread.
 - Matcha has no mouse wheel: pages scroll by dragging or with Page Up / Page Down. Keys are given by name ("RightShift", "F", "F1") or Enum.KeyCode.
 - Clean up in the window's OnUnload option; Window:Destroy() removes everything.
+
+Rules that matter for any Matcha script:
+- There is no Instance.new, getgenv, hookfunction or request; share state through _G and fetch with game:HttpGet.
+- loadstring runs code but drops its return values.
+- Unsupported properties read as nil (no error); writing one errors.
+- Loops in spawned threads can stop resuming after the script ends; use RunService.Heartbeat / RenderStepped connections for ongoing work.
+- Input is polled: iskeypressed(vk), ismouse1pressed(), Player:GetMouse().X/Y; UserInputService.InputChanged doesn't exist (no mouse wheel).
 
 ---
 
@@ -68,7 +77,7 @@ Press `Right Shift` to show or hide the window. Drag it by the title. Every wind
 
 - [Window](https://martinikaws.github.io/GainUI/md/window-create.md): Title, size, accent, keys and saving.
 - [Elements](https://martinikaws.github.io/GainUI/md/elements-toggle.md): Every control you can put in a tab.
-- [Matcha notes](https://martinikaws.github.io/GainUI/md/guides-matcha.md): What the library does for you, and its limits.
+- [Matcha](https://martinikaws.github.io/GainUI/md/matcha.md): What Matcha supports, and the quirks that break scripts.
 - [Full example](https://martinikaws.github.io/GainUI/md/start-example.md): Every element in one script.
 
 ---
@@ -698,9 +707,9 @@ ToggleKey = 0x2D               -- Windows key code
 
 ---
 
-# Matcha notes
+# How GainUI handles Matcha
 
-> Matcha isn't a normal executor. Here's what GainUI does about that, and what it can't do.
+> What GainUI does for you about Matcha's quirks, and its limits. For Matcha itself, see the Matcha section.
 
 ## Everything is drawn
 
@@ -768,3 +777,204 @@ Tab:CreateSlider({Name = "Speed", Range = {16, 100}, Increment = 1, CurrentValue
 | `Element:Set(v)` | `Element:Set(v)` (same) |
 
 > **Warning:** Icons, key systems and Discord invites aren't part of GainUI.
+
+---
+
+# Matcha basics
+
+> Matcha is an external Luau VM for Roblox. It works differently from a normal executor, and scripts have to be written for that.
+
+## What Matcha is
+
+Matcha runs **outside** the Roblox client. It doesn't hook the engine; it reads and writes the game's memory and emulates the Roblox API on top of that. So it only has the classes, properties and functions it implements. The [official docs](https://matcha-latte.gitbook.io/matcha) list them, and the pages here add what we found in practice.
+
+## Rules that break scripts
+
+- **Bindings are a fixed list.** Reading a property Matcha doesn't support doesn't error: it falls back to `FindFirstChild` and gives `nil`. An unexplained `nil` usually means "unsupported". **Writing** an unsupported property errors (`Unknown property`).
+- **No instances.** There is no `Instance.new`, so no ScreenGuis, parts or sounds of your own. Draw UI with the [Drawing library](https://martinikaws.github.io/GainUI/md/matcha-drawing.md) (that's what GainUI does).
+- **`loadstring` drops return values.** `loadstring("return 5")()` gives nothing, even through `pcall`. Share values through `_G` instead; there is no `getgenv` or `shared`. That's why GainUI loads with `... or _G.GainUI`.
+- **Threads can stop.** A `task.spawn` loop that waits with `task.wait` can stop resuming once the script that started it has finished. For anything that must keep running, connect to `RunService.Heartbeat` or `RenderStepped` and throttle inside it.
+- **No mouse wheel.** `UserInputService.InputChanged` is `nil`; only `InputBegan` and `InputEnded` exist. Poll input instead: `iskeypressed`, `ismouse1pressed` and `Player:GetMouse()` (`Mouse.X` / `Mouse.Y`).
+- **Roblox must be focused** for key and mouse input, including `keypress` and `mouse1click`. Check `isrbxactive()`.
+- **Your clicks also reach the game.** Call `setrobloxinput(false)` while the mouse is over your UI, and `setrobloxinput(true)` afterwards.
+- **Autoexec runs before the game exists.** `game.GameId` is `0` until it loads, and yielding at the top level of an autoexec script errors. Wait inside `task.spawn` for `game:IsLoaded()` and `LocalPlayer`, then check `game.GameId` before doing anything game-specific.
+- **Files:** `writefile` refuses some extensions (`.png` among them). Save binary data with another extension such as `.dat`.
+- **Memory functions** need unsafe Luau execution enabled in Matcha. A bad `memory_write` can crash the game.
+
+## Patterns that work
+
+```lua
+-- only in one game, and only once it has loaded (safe in autoexec)
+local GAME_ID = 6035872082
+task.spawn(function()
+    while not (game:IsLoaded() and game:GetService("Players").LocalPlayer) do task.wait(0.5) end
+    if game.GameId ~= GAME_ID then return end
+    -- ...
+end)
+
+-- something that keeps running: a connection, throttled
+local last = 0
+local conn = game:GetService("RunService").Heartbeat:Connect(function()
+    if tick() - last < 0.5 then return end
+    last = tick()
+    -- ...
+end)
+
+-- a value another script can reach (loadstring can't return it)
+_G.MyScript = {stop = function() conn:Disconnect() end}
+```
+
+> **Note:** The Matcha-specific files: [official docs as one text file](https://matcha-latte.gitbook.io/matcha/llms-full.txt). Everything on these pages is also in GainUI's [llms.txt](llms.txt).
+
+---
+
+# Functions
+
+> Every global function Matcha has, including the ones the official docs don't list yet.
+
+## Scripts and globals
+
+| Function | Description |
+| --- | --- |
+| `loadstring(source, chunkname?) -> function?, error?` | Compiles code. The function it gives back runs, but its return values are lost (see Matcha basics). |
+| `require(path) -> table` | Runs a workspace file ending in .lua or .luau. |
+| `decompile(script) -> string` | Decompiles a LocalScript or ModuleScript. |
+| `getscripts() -> {Instance}` | All scripts in the game. |
+| `getscriptbytecode(script) -> string` | A script's bytecode. |
+| `getscripthash(script) -> string` | A hash of a script's bytecode, to tell versions apart. |
+| `getgc() / findgc(...)` | Garbage-collector access. Not documented; findgc is slow (tens of seconds). |
+| `identifyexecutor() -> string` | The executor name and version, like "Matcha 1.0.0". |
+| `notify(message, title, seconds)` | A Matcha notification. |
+| `WorldToScreen(position) -> Vector2, boolean` | A 3D point on screen, and whether it's visible. |
+| `base64encode(s) / base64decode(s)` | Base64 conversion. |
+| `setfflag(name, value) / getfflag(name)` | Fast flags (unfinished in Matcha). |
+| `print / printl / warn / error` | Console output. |
+
+## Input
+
+| Function | Description |
+| --- | --- |
+| `iskeypressed(keycode) -> boolean` | Whether a key is held. Key codes are Windows virtual-key codes (0x41 = "A", 0xA1 = Right Shift). |
+| `ismouse1pressed() / ismouse2pressed() -> boolean` | Whether the left / right mouse button is held. |
+| `keypress(keycode) / keyrelease(keycode)` | Presses / releases a key (Roblox must be focused). |
+| `mouse1press() / mouse1release() / mouse1click()` | The left button. mouse2... for the right one. |
+| `mousemoveabs(x, y) / mousemoverel(dx, dy)` | Moves the cursor. |
+| `mousescroll(amount)` | Scrolls the wheel (sending works; reading it doesn't). |
+| `setrobloxinput(enabled)` | false stops the game from receiving your input; true gives it back. |
+| `isrbxactive() -> boolean` | Whether the Roblox window is focused. |
+| `setclipboard(text)` | Copies text. (There is no getclipboard.) |
+
+## Files
+
+All paths are relative to Matcha's workspace folder. Not in the official docs, but all present:
+
+| Function | Description |
+| --- | --- |
+| `readfile(path) -> string` | A file's contents. |
+| `writefile(path, text)` | Writes a file (some extensions, like .png, are refused). |
+| `appendfile(path, text)` | Adds to the end of a file. |
+| `isfile(path) / isfolder(path) -> boolean` | Whether it exists. |
+| `makefolder(path) / delfolder(path) / delfile(path)` | Folders and deleting. |
+| `listfiles(path) -> {string}` | A folder's contents. |
+
+## Memory
+
+| Function | Description |
+| --- | --- |
+| `getbase() -> number` | RobloxPlayerBeta.exe's base address. |
+| `memory_read(type, address) -> any` | Reads "int", "float", "double", "byte", "string" or "uintptr_t". |
+| `memory_write(type, address, value)` | Writes one. Wrong types or addresses can crash the game. |
+
+> **Note:** `Instance.Address` gives any instance's address in memory. Memory functions need unsafe Luau execution enabled in Matcha's settings.
+
+## Threads and time
+
+| Function | Description |
+| --- | --- |
+| `task.spawn(fn, ...) / task.defer(fn, ...)` | Runs a function in a new thread. |
+| `task.wait(seconds?) / task.delay(seconds, fn)` | Waits, or runs later. (Plain wait, spawn and tick exist too.) |
+
+## Not available
+
+`Instance.new`, `getgenv`, `getrenv`, `shared`, `hookfunction`, `getrawmetatable`, `newcclosure`, `request / http_request`, `getcustomasset`, `cloneref`, `gethui`, `fireclickdetector`, `firetouchinterest`, `loadfile`, `getclipboard`. Use `game:HttpGet(url)` for web requests and `_G` for shared state.
+
+---
+
+# Classes & datatypes
+
+> The Roblox classes, properties and types Matcha supports. Anything else reads as nil.
+
+| Class | What works |
+| --- | --- |
+| DataModel (game) | `PlaceId`, `GameId`, `JobId`, `:GetService(name)`, `:HttpGet(url)`, `:IsLoaded()` |
+| Instance (all) | `Name`, `ClassName`, `Parent` (writable), `Address`; `:FindFirstChild(name, recursive?)`, `:FindFirstChildOfClass`, `:FindFirstChildWhichIsA`, `:WaitForChild`, `:GetChildren`, `:GetDescendants`, `:IsA`, `:IsDescendantOf`, `:GetFullName`, `:GetAttribute`, `:GetAttributes`, `:SetAttribute` |
+| Players | `LocalPlayer`, `:GetPlayers()`, `PlayerAdded`, `PlayerRemoving` |
+| Player | `Name`, `Character`, `Team`, `:GetMouse()` |
+| Mouse | `X`, `Y` (screen pixels) |
+| Workspace | `CurrentCamera` |
+| Camera | `ViewportSize`, `FieldOfView`, `Position`, `lookAt(at, target)` |
+| BasePart / MeshPart | `Size`, `Position`, `Transparency`, `Color`, `Velocity`, `AssemblyLinearVelocity`, `CanCollide`; MeshPart `MeshId`, `TextureId` |
+| Model / Humanoid | `PrimaryPart`; `Health`, `MaxHealth` |
+| ValueBase (IntValue, StringValue...) | `Value` |
+| GuiObject / TextLabel | `AbsoluteSize`, `AbsolutePosition`; TextLabel `Text` can be read, not written |
+| HttpService | `:JSONEncode`, `:JSONDecode`, `:GenerateGUID` |
+| UserInputService | `InputBegan`, `InputEnded` (no `InputChanged`, so no mouse wheel) |
+| RunService | `Heartbeat`, `RenderStepped` connections |
+
+## Datatypes
+
+| Type | Constructors and fields |
+| --- | --- |
+| Vector3 | `Vector3.new(x, y, z)`; `X`, `Y`, `Z` |
+| Vector2 | `Vector2.new(x, y)`; `X`, `Y` |
+| Color3 | `Color3.new(r, g, b)` (0-1), `fromRGB`, `fromHSV`, `fromHex`; `R`, `G`, `B` |
+
+> **Note:** Check before you rely on something: read it and print it. `nil` where you expected a value means Matcha doesn't bind it.
+
+---
+
+# Drawing
+
+> Matcha's only way to put things on screen. Everything GainUI shows is made of these.
+
+```lua
+Drawing.new(kind: string) -> DrawingObject
+```
+
+```lua
+local box = Drawing.new("Square")
+box.Position = Vector2.new(20, 20)
+box.Size = Vector2.new(200, 120)
+box.Color = Color3.fromRGB(86, 140, 255)
+box.Filled = true
+box.Corner = 8
+box.Visible = true
+
+task.wait(5)
+box:Remove()
+```
+
+## Kinds and properties
+
+| Kind | Properties |
+| --- | --- |
+| All | `Visible`, `Color`, `Transparency` (1 = solid), `ZIndex`, `Position`; `:Remove()` |
+| Square | `Size`, `Filled`, `Thickness`, `Corner` (rounded corners) |
+| Line | `From`, `To`, `Thickness` |
+| Circle | `Radius`, `NumSides`, `Filled`, `Thickness` |
+| Triangle / Quad | `PointA`, `PointB`, `PointC` (Quad: `PointD`), `Filled` |
+| Text | `Text`, `Size`, `Font`, `Center`, `Outline`; `TextBounds` (read: the drawn size) |
+| Image | `Data` (the file's bytes, PNG or JPG), `Size`, `Rounding`. Not in the official docs. |
+
+## Fonts
+
+`Drawing.Fonts.UI`, `Drawing.Fonts.System`, `Drawing.Fonts.SystemBold`, `Drawing.Fonts.Minecraft`, `Drawing.Fonts.Monospace`, `Drawing.Fonts.Pixel`, `Drawing.Fonts.Fortnite`, `Drawing.Fonts.ProximaSoftBold`
+
+## Tips
+
+- **Reuse objects.** Keep a pool and hide what you don't draw this frame instead of making new ones every frame.
+- **Only write what changed.** Each property write costs something; compare with the last value first.
+- **Text sits high.** Matcha draws text about a third of its size above its Position; add `size * 0.3` to line it up.
+- **Measure text** with a hidden Text object's `TextBounds` to trim or center it.
+- **Images** come from bytes: `game:HttpGet(url)` or `readfile`. Cache downloads with a non-.png extension.
+- **Clean up.** Remove every object when your script unloads, or it stays on screen.
